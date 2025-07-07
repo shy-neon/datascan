@@ -23,6 +23,7 @@
 .flatpickr-day.startRange:hover,
 .flatpickr-day.endRange:hover {
     border-radius: 0 !important; /* rende quadrata la cella */
+    
 }
 
 .flatpickr-day.today {
@@ -30,8 +31,8 @@
 }
 
 .flatpickr-day.selected:hover,
-.flatpickr-day.startRange:hover,
-.flatpickr-day.endRange:hover {
+.flatpickr-day.startRange,
+.flatpickr-day.endRange {
   background: #1266CD !important;
 }
 
@@ -42,4 +43,46 @@
 .flatpickr-calendar {
     border-radius: 0 !important;
     box-shadow: none;
+}
+
+
+.tabulator,
+.tabulator .tabulator-tableholder,
+.tabulator .tabulator-table,
+.tabulator .tabulator-row,
+.tabulator .tabulator-cell,
+.tabulator .tabulator-header,
+.tabulator .tabulator-col {
+  border: none !important;
+  
+}
+ .tabulator{
+   border: none !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* ombra leggera */
+  background-color: white !important;
+ }
+
+.tabulator,
+.tabulator .tabulator-tableholder,
+.tabulator .tabulator-table,
+.tabulator .tabulator-placeholder,
+.tabulator .tabulator-footer {
+  background-color: white !important;
+}
+
+.tabulator .tabulator-header .tabulator-col {
+  background-color: #1266bc !important;
+  color: white !important;       /* testo bianco per contrasto */
+  font-weight: 600;              /* testo leggermente più marcato */
+}
+
+.tabulator .tabulator-row.even {
+  background-color: #E2E8F0 !important; /* slate-200 */
+}
+ .tabulator .tabulator-row.odd {
+  background-color: #ffffff !important;
+}
+
+.tabulator .tabulator-footer {
+  border-top: 1px solid white !important;
 }
