@@ -1,0 +1,9 @@
+
+.airpicker {
+    background-color: #ffffff !important;
+    border-radius: 0.75rem !important; /* rounded-xl */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+    font-family: 'Inter', sans-serif !important;
+    font-size: 0.875rem !important; /* text-sm */
+    color: #1f2937 !important; /* gray-800 */
+}

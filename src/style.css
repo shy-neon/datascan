@@ -9,3 +9,37 @@
   font-weight: normal;
   font-style: normal;
 }
+
+.flatpickr-day.selected,
+.flatpickr-day.startRange,
+.flatpickr-day.endRange,
+.flatpickr-day.selected.inRange,
+.flatpickr-day.startRange.inRange,
+.flatpickr-day.endRange.inRange,
+.flatpickr-day.selected:focus,
+.flatpickr-day.startRange:focus,
+.flatpickr-day.endRange:focus,
+.flatpickr-day.selected:hover,
+.flatpickr-day.startRange:hover,
+.flatpickr-day.endRange:hover {
+    border-radius: 0 !important; /* rende quadrata la cella */
+}
+
+.flatpickr-day.today {
+    border-radius: 0%;
+}
+
+.flatpickr-day.selected:hover,
+.flatpickr-day.startRange:hover,
+.flatpickr-day.endRange:hover {
+  background: #1266CD !important;
+}
+
+.flatpickr-weekdays{
+  font-family: "oswald", "sans-serif";
+}
+
+.flatpickr-calendar {
+    border-radius: 0 !important;
+    box-shadow: none;
+}

@@ -5,9 +5,17 @@ import WebMap from "@arcgis/core/WebMap";
 import MapView from "@arcgis/core/views/MapView";
 import { Chart } from 'chart.js/auto';
 import PopupTemplate from "@arcgis/core/PopupTemplate";
+import flatpickr from "flatpickr";
+import "flatpickr/dist/flatpickr.min.css";
+
 
 
 const ctx = document.getElementById('graficoTorta').getContext('2d');
+
+flatpickr("#datePicker", {
+   inline: true,
+    mode: "range",
+});
 
 const webmap = new WebMap({
   portalItem: {
@@ -49,23 +57,33 @@ view.when(() => {
 
     if (features.length > 0) {
       const fullFeature = features[0];
-      console.log("✅ Attributi completi:", fullFeature.attributes);
+      console.log("Attributi completi:", fullFeature.attributes);
 
-      const nomeLabel = document.getElementById("Nome_Stazione")
+      const nomeLabel = document.getElementById("nome")
       nomeLabel.innerHTML = fullFeature.attributes["Nome_Stazione"]
 
-      const ID_Centralina = document.getElementById("ID_Centralina")
-      nomeLabel.innerHTML = fullFeature.attributes["ID_Centralina"]
+      const ID_Centralina = document.getElementById("id")
+      ID_Centralina.innerHTML = fullFeature.attributes["ID_Centralina"]
 
-      const cartellini = document.getElementById("cartellini")
+      const cartellini = document.getElementById("numero")
       cartellini.innerHTML = fullFeature.attributes["Cart_Elaborati"]
 
       
-      tabella([fullFeature.attributes["Attenzionati"], fullFeature.attributes["Malfunzionanti"], fullFeature.attributes["Zero_Pioggia"], fullFeature.attributes["Discordanti"]], ctx)
+      tabella([fullFeature.attributes["Attenzionati"], fullFeature.attributes["Malfunzionanti"], fullFeature.attributes["Zero_Pioggia"], fullFeature.attributes["Discordanti"], ( fullFeature.attributes["Cart_Elaborati"]- fullFeature.attributes["Attenzionati"]-  fullFeature.attributes["Malfunzionanti"] -fullFeature.attributes["Zero_Pioggia"] - fullFeature.attributes["Discordanti"])], ctx)
 
       console.log("Cart_elaborati:", fullFeature.attributes["Cart_elaborati"]);
     }
   }
+
+   var tableLayer = webmap.tables.getItemAt(0);
+
+      var featureTable = new FeatureTable({
+        view: view,
+        layer: tableLayer,
+        container: "tableDiv"
+      });
+
+     
 });
 
   }
@@ -82,18 +100,19 @@ function tabella (dati, ctx) {
     return;
   } 
 
-   const graficoTorta = new Chart(ctx, {
-      type: 'doughnut',
+  const graficoTorta = new Chart(ctx, {
+    type: 'doughnut',
       data: {
-        labels: ['Attenzionare', 'Malfunzionanti', 'Zero Pioggia', 'Discordanti'],
+        labels: ['Attenzionare', 'Malfunzionanti', 'Zero Pioggia', 'Discordanti', 'Elaborati'],
         datasets: [{
           label: 'Percentuale di vendite',
           data: dati,
           backgroundColor: [
-            'rgba(54, 56, 235, 0.6)',
-            'rgba(54, 162, 235, 0.6)',
-            'rgba(255, 206, 86, 0.6)',
-            'rgba(75, 192, 192, 0.6)'
+             'rgba(96, 165, 250, 0.6)',   // blu deciso - funzionanti
+  'rgba(234, 179, 8, 0.6)',   // giallo semaforo - da attenzionare
+  'rgba(239, 68, 68, 0.6)',   // rosso semaforo - malfunzionanti
+  'rgba(209, 213, 219, 0.6)', // grigio medio - zero pioggia
+  'rgba(30, 64, 175, 0.6)'   // verde semaforo scuro - discordanti
           ],
           borderColor: [
             'rgba(255, 99, 132, 1)',
@@ -114,7 +133,7 @@ function tabella (dati, ctx) {
           },
           title: {
             
-            text: 'Grafico a Torta delle Vendite'
+            text: 'Grafico Cartellini'
           }
         }
       }

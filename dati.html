@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <link rel="stylesheet" href="https://js.arcgis.com/4.27/esri/themes/light/main.css" />
+  <link rel="stylesheet" href="./src/airpicker.css" />
   <script src="https://js.arcgis.com/4.27/"></script>
   <script type="module" src="./src/js/mappadati.js" async></script>
   <style>
@@ -57,21 +58,21 @@
     <div class="h-0.3 bg-black"></div>
   </navbar>
 
-    <div class="flex justify-center mt-10 bg-slate-200 w-fit h-[500px]">
+    <div class="flex justify-center mt-10 bg-slate-200 w-fit h-[500px] mb-10 shadow-md">
         <div class="h-[500px] w-[600px]">
         <div id="viewDiv"></div>
         </div>
-        <div class="mt-10 text-2xl m-10">
+        <div class="mt-10 text-2xl m-10 w-[500px]">
             <h1 style="font-family: oswald, sans-serif;" class="mb-5">INFO CENTRALINA</h1>
             <div class="flex gap-3">
-                <h2 class="font-black text-slate-600" >Nome stazione:  </h2> <h2 id="Nome_Stazione">Bovolenta - Padava (VE)</h2> 
+                <h2 class="font-black text-slate-600" >Nome stazione:  </h2> <h2 id="nome">Seleziona una stazine</h2> 
             </div>
             <div class="flex gap-3">
-                <h2 class="font-black text-slate-600">ID Centralina:  </h2> <h2 id="ID_Centralina">PDBoVe</h2> 
+                <h2 class="font-black text-slate-600">ID Centralina:</h2> <h2 id="id"></h2> 
             </div>
             
             <div class="flex gap-3">
-                <h2 id="info" class="font-black text-slate-600">Cartellini </h2> <h2 id="cartellini">2300</h2> 
+                <h2 id="info" class="font-black text-slate-600">Cartellini</h2> <h2 id="numero"></h2> 
             </div>
             
 
@@ -81,5 +82,7 @@
         
         </div>
     </div>
+
+  <input class="rounded-0" style="display: none;" id="datePicker" type="text" />
 </body>
 </html>
