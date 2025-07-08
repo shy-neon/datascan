@@ -1,5 +1,6 @@
 import '../style.css'
 import "@arcgis/map-components/components/arcgis-map";
+
 import "@arcgis/map-components/components/arcgis-zoom";
 import WebMap from "@arcgis/core/WebMap";
 import MapView from "@arcgis/core/views/MapView";
@@ -12,9 +13,13 @@ import 'tabulator-tables/dist/css/tabulator.min.css';
 import { resolve } from 'chart.js/helpers';
 
 
-
+import 'chartjs-adapter-date-fns';
 
 const ctx = document.getElementById('graficoTorta').getContext('2d');
+const prec = document.getElementById('precipitazioni').getContext('2d');
+const cumul = document.getElementById('cumulata').getContext('2d');
+const iet = document.getElementById('ietogramma').getContext('2d');
+
 
 flatpickr("#datePicker", {
   inline: true,
@@ -33,7 +38,7 @@ const view = new MapView({
   map: webmap
 });
 
-let datiTabella = [];
+
 
 view.when(() => {
   // Trova il layer interessato
@@ -92,6 +97,11 @@ view.when(() => {
           tabella(tabel)
           calcolaSpan(tabel)
 
+          
+
+          graficoPrecipitazione(prec, tabel)
+          graficocumulata(cumul, tabel)
+          graficoietogramma(iet, tabel)
         }
       }
     });
@@ -121,7 +131,7 @@ function calcolaSpan(tabella) {
           primorecord = result.features[0].attributes;
           console.log("primo record:", primorecord);
           console.log("Ultimo record:", ultimoRecord);
-          const spanval = (new Date(primorecord.DataOra).toString().substring(4, 15) + " - " + new Date(ultimoRecord.DataOra).toString().substring(4, 15))
+          const spanval = ("dal " + formattaData( new Date(primorecord.DataOra)) + " al " + formattaData( new Date(ultimoRecord.DataOra)))
           span.innerHTML = spanval
         } else {
           console.log("Nessun record trovato.");
@@ -132,11 +142,10 @@ function calcolaSpan(tabella) {
       console.log("Nessun record trovato.");
     }
   })
-
-
 }
 
 function tabella(tabel) {
+  let datiTabella = [];
   tabel.queryFeatures({
     where: "1=1",
     outFields: ["*"],
@@ -144,7 +153,7 @@ function tabella(tabel) {
   }).then(result => {
     datiTabella = result.features.map(f => ({ ...f.attributes }));
     let tabellasist = datiTabella.map(d => ({
-      data: new Date(d.DataOra).toString().substring(0, 15),
+      data: formattaData(new Date(d.DataOra)),
       mm: d.Pioggia_mm,
       qualita: d.Qualita,
       cartellino: d.Cartellino
@@ -221,5 +230,272 @@ function formattaData(data) {
   const yyyy = data.getFullYear();
   const mm = String(data.getMonth() + 1).padStart(2, '0'); // Mese da 1 a 12
   const dd = String(data.getDate()).padStart(2, '0');
-  return `${yyyy}-${mm}-${dd}`;
+  return `${dd}-${mm}-${yyyy}`;
+}
+
+function graficoPrecipitazione(graf, tabel) {
+  let datiTabella = [];
+  const existingChart = Chart.getChart("precipitazioni");
+
+  if (existingChart) {
+    tabel.queryFeatures({
+    where: "1=1",
+    outFields: ["*"],
+    returnGeometry: false
+    }).then(result => {
+      datiTabella = result.features.map(f => ({ ...f.attributes }));
+      existingChart.data.datasets[0].data = pergiorno(datiTabella);
+      existingChart.update();
+    return;
+    });
+    return;
+  }
+
+  tabel.queryFeatures({
+    where: "1=1",
+    outFields: ["*"],
+    returnGeometry: false
+  }).then(result => {
+    datiTabella = result.features.map(f => ({ ...f.attributes }));
+    let tabellasist = datiTabella.map(d => ({
+      x: d.DataOra,
+      y: d.Pioggia_mm,
+    }))
+
+    const graficoTorta = new Chart(graf, {
+    type: 'bar',
+    data: {
+      labels: [],
+      datasets: [{
+        label: 'Pioggia in mm',
+        data: pergiorno(datiTabella),
+        backgroundColor: '#1266CD',
+        borderWidth: 0
+      }]
+    },
+    options: {
+      parsing: false,
+      scales:{
+        x: {
+          type: 'time',
+          time: {
+            unit: 'day',
+          }
+        },
+        y: {
+          title: {
+            display: true,
+            text: 'mm'
+          }
+        }
+      }
+    },
+    plugins: [shadowPlugin]
+  });
+  });
+
+  
+}
+
+function pergiorno (dati) {
+  let datiarray = [];
+  let x;
+  let y;
+  let giorno = dati[0].Giorno
+  let mmgiorno = 0
+  dati.forEach(d => {
+    if(d.Giorno == giorno){
+      mmgiorno = mmgiorno + d.Pioggia_mm
+    } else {
+      let dato = {x,y}
+      dato.y = mmgiorno;
+      dato.x = giorno;
+      datiarray.push(dato)
+      giorno = d.Giorno
+      mmgiorno = d.Pioggia_mm
+    }
+  });
+  return datiarray
+}
+
+const shadowPlugin = {
+    id: 'shadowLine',
+    beforeDatasetsDraw(chart, args, options) {
+        const { ctx } = chart;
+        ctx.save();
+        ctx.shadowColor = options.shadowColor || 'rgba(0,0,0,0.3)';
+        ctx.shadowBlur = options.shadowBlur || 10;
+        ctx.shadowOffsetX = options.shadowOffsetX || 0;
+        ctx.shadowOffsetY = options.shadowOffsetY || 4;
+    },
+    afterDatasetsDraw(chart, args, options) {
+        chart.ctx.restore();
+    }
+};
+
+function graficocumulata(graf, tabel) {
+  
+  const existingChart = Chart.getChart("cumulata");
+let datiTabella = [];
+  if (existingChart) {
+    tabel.queryFeatures({
+    where: "1=1",
+    outFields: ["*"],
+    returnGeometry: false
+    }).then(result => {
+      datiTabella = result.features.map(f => ({ ...f.attributes }));
+      let cumulata = 0;
+      let dati = cumula(datiTabella);
+      existingChart.data.datasets[0].data = dati;
+      existingChart.update();
+    return;
+    });
+    return;
+  }
+
+  tabel.queryFeatures({
+    where: "1=1",
+    outFields: ["*"],
+    returnGeometry: false
+  }).then(result => {
+    let cumulated = 0;
+    datiTabella = result.features.map(f => ({ ...f.attributes }));
+    let tabellasist = datiTabella.map(d => {
+    cumulated += d.Pioggia_mm;
+    return {
+        x: d.DataOra,
+        y: cumulated
+    };
+  });
+
+    const graficoTorta = new Chart(graf, {
+    type: 'line',
+    data: {
+      labels: [],
+      datasets: [{
+        label: 'Pioggia in mm',
+        data: tabellasist,
+        backgroundColor: '#1266CD',
+        borderWidth: 0
+      }]
+    },
+    options: {
+      parsing: false,
+      scales:{
+        x: {
+          type: 'time',
+          time: {
+            unit: 'day',
+          }
+        },
+        y: {
+          title: {
+            display: true,
+            text: 'mm'
+          }
+        }
+      }
+    },
+  });
+  });
+
+  
+}
+
+function graficoietogramma(graf, tabel) {
+  
+  const existingChart = Chart.getChart("ietogramma");
+  let datiTabella = [];
+  if (existingChart) {
+    tabel.queryFeatures({
+    where: "1=1",
+    outFields: ["*"],
+    returnGeometry: false
+    }).then(result => {
+      datiTabella = result.features.map(f => ({ ...f.attributes }));
+      existingChart.data.datasets[0].data = pergiornoietogramma(datiTabella);
+      existingChart.update();
+    return;
+    });
+    return;
+  }
+
+  tabel.queryFeatures({
+    where: "1=1",
+    outFields: ["*"],
+    returnGeometry: false
+  }).then(result => {
+    datiTabella = result.features.map(f => ({ ...f.attributes }));
+    let tabellasist = datiTabella.map(d => ({
+      x: d.DataOra,
+      y: d.Pioggia_mm,
+    }))
+
+    const graficoTorta = new Chart(graf, {
+    type: 'bar',
+    data: {
+      labels: [],
+      datasets: [{
+        label: 'Pioggia in mm',
+        data: pergiornoietogramma(datiTabella),
+        backgroundColor: '#1266CD',
+        borderWidth: 0
+      }]
+    },
+    options: {
+      parsing: false,
+      scales:{
+        x: {
+          type: 'time',
+          time: {
+            unit: 'day',
+          }
+        },
+        y: {
+          title: {
+            display: true,
+            text: 'mm/h'
+          }
+        }
+      }
+    },
+    plugins: [shadowPlugin]
+  });
+  });
+
+  
+}
+
+function pergiornoietogramma (dati) {
+  let datiarray = [];
+  let x;
+  let y;
+  let giorno = dati[0].Giorno
+  let mmgiorno = 0
+  dati.forEach(d => {
+    if(d.Giorno == giorno){
+      mmgiorno = mmgiorno + d.Pioggia_mm
+    } else {
+      let dato = {x,y}
+      dato.y = mmgiorno/24;
+      dato.x = giorno;
+      datiarray.push(dato)
+      giorno = d.Giorno
+      mmgiorno = d.Pioggia_mm
+    }
+  });
+  return datiarray
+}
+
+
+function cumula (datiTabella) {
+  let cumulated = 0;
+  let tabellasist = datiTabella.map(d => {
+    cumulated += d.Pioggia_mm;
+    return {
+        x: d.DataOra,
+        y: cumulated
+    };
+  });
+  return tabellasist
 }
