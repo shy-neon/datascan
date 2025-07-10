@@ -8,22 +8,105 @@ import { Chart } from 'chart.js/auto';
 import PopupTemplate from "@arcgis/core/PopupTemplate";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
+import { Italian } from "flatpickr/dist/l10n/it.js";
 import { TabulatorFull as Tabulator } from 'tabulator-tables';
 import 'tabulator-tables/dist/css/tabulator.min.css';
 import { resolve } from 'chart.js/helpers';
-
-
 import 'chartjs-adapter-date-fns';
+import { get } from 'jquery';
 
 const ctx = document.getElementById('graficoTorta').getContext('2d');
-const prec = document.getElementById('precipitazioni').getContext('2d');
 const cumul = document.getElementById('cumulata').getContext('2d');
 const iet = document.getElementById('ietogramma').getContext('2d');
+const info = document.getElementById('info')
+const sel = document.getElementById('sel')
+const mappa = document.getElementById('viewDiv')
+const dat = document.getElementById('datediv')
+
+const med = document.getElementById('media')
+const scart = document.getElementById('SQM')
 
 
-flatpickr("#datePicker", {
+function calcolaMediaPioggia(array) {
+  if (!array.length) {
+    throw new Error("Array vuoto");
+  }
+
+  // Filtra solo quelli che hanno Pioggia_mm numerico
+  const piogge = array
+    .map(item => item.Pioggia_mm)
+    .filter(val => typeof val === "number" && !isNaN(val));
+
+  if (!piogge.length) {
+    throw new Error("Nessun valore numerico Pioggia_mm trovato");
+  }
+
+  const somma = piogge.reduce((acc, val) => acc + val, 0);
+  const media = somma / piogge.length;
+  med.innerHTML = media.toFixed(3)
+  return media;
+}
+
+function calcolaMediaESqmPioggia(array) {
+  if (!array.length) {
+    throw new Error("Array vuoto");
+  }
+
+  const piogge = array
+    .map(item => item.Pioggia_mm)
+    .filter(val => typeof val === "number" && !isNaN(val));
+
+  if (!piogge.length) {
+    throw new Error("Nessun valore numerico Pioggia_mm trovato");
+  }
+
+  const somma = piogge.reduce((acc, val) => acc + val, 0);
+  const media = somma / piogge.length;
+
+  const sommaQuadrati = piogge.reduce((acc, val) => acc + Math.pow(val - media, 2), 0);
+  const sqm = Math.sqrt(sommaQuadrati / piogge.length);
+
+  med.innerHTML = media.toFixed(3)
+  scart.innerHTML = sqm.toFixed(3)
+  return {
+    media: Number(media.toFixed(3)),
+    sqm: Number(sqm.toFixed(3))
+  };
+}
+
+
+
+if (window.matchMedia("(min-width:1080px)").matches) {
+  mappa.style.width = "185%"
+  dat.style.display = "hidden"
+} else {
+  console.log("Siamo sotto sm (base)");
+  mappa.style.width = "100%"
+  mappa.style.height = "190%";
+  dat.style.display = "none"
+
+}
+
+let tabel = null;
+
+let cal = flatpickr("#datePicker", {
   inline: true,
   mode: "range",
+   locale: Italian,
+  onChange: function(selectedDates, dateStr, instance) {
+    console.log(dateStr)
+    if(selectedDates.length >= 2){
+      let query = ("DataOra BETWEEN '" + dateStr.substring(0,10) + "' AND '" +  dateStr.substring(14,25) + "'")
+      console.log(query)
+      graficocumulata(cumul, tabel, query)
+      graficoietogramma(iet, tabel, query)
+      if(query == null){
+        tabella(tabel, "1=1")
+      }else {
+        tabella(tabel, query)
+      }
+    }
+  }
 });
 
 const webmap = new WebMap({
@@ -86,22 +169,37 @@ view.when(() => {
           const cartellini = document.getElementById("numero")
           cartellini.innerHTML = fullFeature.attributes["Cart_Elaborati"]
 
-
+          
           grafico([fullFeature.attributes["Attenzionati"], fullFeature.attributes["Malfunzionanti"], fullFeature.attributes["Zero_Pioggia"], fullFeature.attributes["Discordanti"], (fullFeature.attributes["Cart_Elaborati"] - fullFeature.attributes["Attenzionati"] - fullFeature.attributes["Malfunzionanti"] - fullFeature.attributes["Zero_Pioggia"] - fullFeature.attributes["Discordanti"])], ctx)
 
           console.log(fullFeature.attributes["ID_Centralina"])
-          const tabel = webmap.tables.find(t => t.title === fullFeature.attributes["ID_Centralina"])
+          tabel = webmap.tables.find(t => t.title === fullFeature.attributes["ID_Centralina"])
           console.log(tabel)
-
-
-          tabella(tabel)
-          calcolaSpan(tabel)
+           dat.style.display = "absolute"
 
           
+          tabella(tabel, "1=1")
+          calcolaSpan(tabel)
 
-          graficoPrecipitazione(prec, tabel)
-          graficocumulata(cumul, tabel)
-          graficoietogramma(iet, tabel)
+          console.log(getmindate(tabel))
+          
+          
+          if (window.matchMedia("(min-width:1080px)").matches) {
+            
+            
+          } else {
+            mappa.style.height = "100%"
+            dat.style.display = "block"
+
+          }
+
+          viewDiv.style.width = "100%";
+          info.style.visibility ="visible";
+          sel.style.visibility ="hidden";
+          setMinDateFromAPI();
+          
+          graficocumulata(cumul, tabel, "1=1")
+          graficoietogramma(iet, tabel, "1=1")
         }
       }
     });
@@ -113,26 +211,27 @@ function calcolaSpan(tabella) {
   let ultimoRecord;
   let primorecord;
   tabella.queryFeatures({
-    where: "1=1", // oppure un filtro più specifico
+    where: "1=1", 
     outFields: ["*"],
-    orderByFields: ["OBJECTID DESC"], // cambia con il campo giusto
+    orderByFields: ["OBJECTID DESC"],
     returnGeometry: false,
-    num: 1 // solo il primo record (cioè l’ultimo in base all'ordinamento)
+    num: 1 
   }).then((result) => {
     if (result.features.length > 0) {
       ultimoRecord = result.features[0].attributes;
       tabella.queryFeatures({
-        where: "1=1", // oppure un filtro più specifico
+        where: "1=1",
         outFields: ["*"],
         returnGeometry: false,
-        num: 1 // solo il primo record (cioè l’ultimo in base all'ordinamento)
+        num: 1 
       }).then((result) => {
         if (result.features.length > 0) {
           primorecord = result.features[0].attributes;
           console.log("primo record:", primorecord);
           console.log("Ultimo record:", ultimoRecord);
-          const spanval = ("dal " + formattaData( new Date(primorecord.DataOra)) + " al " + formattaData( new Date(ultimoRecord.DataOra)))
+          const spanval = (formattaData( new Date(primorecord.DataOra)) + " ~ " + formattaData( new Date(ultimoRecord.DataOra)))
           span.innerHTML = spanval
+          return [formattaData( new Date(primorecord.DataOra)), formattaData( new Date(ultimoRecord.DataOra))]
         } else {
           console.log("Nessun record trovato.");
         }
@@ -142,25 +241,30 @@ function calcolaSpan(tabella) {
       console.log("Nessun record trovato.");
     }
   })
+
+ 
 }
 
-function tabella(tabel) {
+function tabella(tabel, where) {
   let datiTabella = [];
   tabel.queryFeatures({
-    where: "1=1",
+    where: where,
     outFields: ["*"],
     returnGeometry: false
   }).then(result => {
     datiTabella = result.features.map(f => ({ ...f.attributes }));
+
+    calcolaMediaESqmPioggia(datiTabella);
+
     let tabellasist = datiTabella.map(d => ({
-      data: formattaData(new Date(d.DataOra)),
+      data: formatUnixToDateTime(d.DataOra),
       mm: d.Pioggia_mm,
       qualita: d.Qualita,
       cartellino: d.Cartellino
     }))
 
     console.log(tabellasist);
-
+    
     const table = new Tabulator("#example-table", {
       data: tabellasist,
       height: "300px",
@@ -189,9 +293,9 @@ function grafico(dati, ctx) {
   const graficoTorta = new Chart(ctx, {
     type: 'doughnut',
     data: {
-      labels: ['Attenzionare', 'Malfunzionanti', 'Zero Pioggia', 'Discordanti', 'Regolari'],
+      labels: ['Attenzionare', 'Malfunzionanti', 'Zero Pioggia', 'Discordanti', 'Elaborati'],
       datasets: [{
-        label: 'Percentuale di vendite',
+        
         data: dati,
         backgroundColor: [
           'rgba(96, 165, 250, 0.6)',   // funzionanti
@@ -218,7 +322,6 @@ function grafico(dati, ctx) {
           position: 'right'
         },
         title: {
-
           text: 'Grafico Cartellini'
         }
       }
@@ -233,13 +336,13 @@ function formattaData(data) {
   return `${dd}-${mm}-${yyyy}`;
 }
 
-function graficoPrecipitazione(graf, tabel) {
+function graficoPrecipitazione(graf, tabel, where) {
   let datiTabella = [];
   const existingChart = Chart.getChart("precipitazioni");
 
   if (existingChart) {
     tabel.queryFeatures({
-    where: "1=1",
+    where: where,
     outFields: ["*"],
     returnGeometry: false
     }).then(result => {
@@ -333,13 +436,13 @@ const shadowPlugin = {
     }
 };
 
-function graficocumulata(graf, tabel) {
+function graficocumulata(graf, tabel, where) {
   
   const existingChart = Chart.getChart("cumulata");
 let datiTabella = [];
   if (existingChart) {
     tabel.queryFeatures({
-    where: "1=1",
+    where: where,
     outFields: ["*"],
     returnGeometry: false
     }).then(result => {
@@ -376,6 +479,7 @@ let datiTabella = [];
         label: 'Pioggia in mm',
         data: tabellasist,
         backgroundColor: '#1266CD',
+        spanGaps: true,
         borderWidth: 0
       }]
     },
@@ -402,13 +506,13 @@ let datiTabella = [];
   
 }
 
-function graficoietogramma(graf, tabel) {
+function graficoietogramma(graf, tabel, where) {
   
   const existingChart = Chart.getChart("ietogramma");
   let datiTabella = [];
   if (existingChart) {
     tabel.queryFeatures({
-    where: "1=1",
+    where: where,
     outFields: ["*"],
     returnGeometry: false
     }).then(result => {
@@ -499,3 +603,151 @@ function cumula (datiTabella) {
   });
   return tabellasist
 }
+
+
+function dataselected(){
+  console.log(tabel)
+}
+
+function formattaDataPerQuery(unixTimestamp) {
+   const date = new Date(unixTimestamp); 
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); 
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+}
+
+function defquery (query) {
+  if(query == null){
+    return "1=1"
+  } else {
+    return query
+  }
+}
+
+function initdate (table) {
+
+  if(table == null){
+    cal.jumpToDate(new Date())
+  }
+  let primorecord;
+  table.queryFeatures({
+    where: "1=1", 
+    outFields: ["*"],
+    returnGeometry: false,
+    num: 1 
+  }).then((result) => {
+    if (result.features.length > 0) {
+      primorecord = result.features[0].attributes;
+      cal.jumpToDate(new Date(primorecord.DataOra))
+    } else {
+      console.log("Nessun record trovato.");
+    }
+  })
+}
+
+function formatUnixToDateTime(unixTimestamp) {
+    const date = new Date(unixTimestamp); 
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); 
+    const day = String(date.getDate()).padStart(2, '0');
+
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
+}
+
+function getmindate (table) {
+  if(table == null){
+    return "2025-01-01"
+  }
+  let primorecord
+  let result = table.queryFeatures({
+    where: "1=1", 
+    outFields: ["*"],
+    returnGeometry: false,
+  }).then((result) => {
+    if (result.features.length > 0) {
+      primorecord = result.features[0].attributes;
+      console.log("mindate."+ formattaDataPerQuery(primorecord.DataOra));
+      return formattaDataPerQuery(primorecord.DataOra)
+    } else {
+      console.log("Nessun record trovato.");
+    }
+  })
+  return result
+}
+
+function getmaxdate (table) {
+  if(table == null){
+    return "2025-01-01"
+  }
+  let ultimorecord
+  let result = table.queryFeatures({
+     where: "1=1", 
+    outFields: ["*"],
+    orderByFields: ["OBJECTID DESC"],
+    returnGeometry: false,
+    num: 1 
+  }).then((result) => {
+    if (result.features.length > 0) {
+      ultimorecord = result.features[0].attributes;
+      console.log("mindate."+ formattaDataPerQuery(ultimorecord.DataOra));
+      return formattaDataPerQuery(ultimorecord.DataOra)
+    } else {
+      console.log("Nessun record trovato.");
+    }
+  })
+  return result
+}
+
+async function setMinDateFromAPI() {
+  const minDate = await getmindate(tabel); 
+  const maxdate = await getmaxdate(tabel)
+  cal.set("minDate", minDate); 
+  cal.set("maxDate", maxdate); 
+  initdate(tabel)
+         
+}
+
+const dati = [
+  { Data: "2025-07-01", Pioggia_mm: 10, Temp: 30 },
+  { Data: "2025-07-02", Pioggia_mm: 5, Temp: 31 },
+  { Data: "2025-07-03", Pioggia_mm: 0, Temp: 29 },
+];
+
+function esportaCSVdaOggetti(arrayOggetti, nomeFile = "dati.csv") {
+  if (!arrayOggetti.length) {
+    alert("Nessun dato da esportare.");
+    return;
+  }
+
+  const intestazioni = Object.keys(arrayOggetti[0]);
+
+  const righe = [
+    intestazioni.join(","), // Header
+    ...arrayOggetti.map(obj =>
+      intestazioni.map(k => JSON.stringify(obj[k] ?? "")).join(",")
+    )
+  ].join("\n");
+
+  const blob = new Blob([righe], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.getElementById("a");
+  a.href = url;
+  a.download = nomeFile;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+// Collega al bottone
+document.getElementById("esportaCsvBtn").addEventListener("click", () => {
+  esportaCSVdaOggetti(dati, "dati_pioggia.csv");
+});

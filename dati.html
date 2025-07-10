@@ -15,6 +15,8 @@
 
     #viewDiv {
       height: 100%;
+    
+      transition: width 0.5s ease, height 0.5s ease;
       width: 100%;
     }
   </style>
@@ -66,7 +68,6 @@
           </g>
         </svg>
 
-
         <svg class="h-7.5" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="50" height="50"
           viewBox="0,0,256,256">
           <g fill-opacity="0.6902" fill="#000000" fill-rule="nonzero" stroke="none" stroke-width="1"
@@ -80,7 +81,6 @@
             </g>
           </g>
         </svg>
-
 
         <svg class="h-8" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="50" height="50"
           viewBox="0,0,256,256">
@@ -114,11 +114,16 @@
     <div class="h-0.3 bg-black"></div>
   </navbar>
 
-  <div class="flex justify-center mt-10 bg-slate-200 w-fit h-[500px] mb-10 shadow-md">
-    <div class="h-[500px] w-[600px]">
-      <div id="viewDiv"></div>
+  <div class="flex flex-col lg:flex-row justify-center mt-10 bg-slate-200 lg:w-fit w-screen mb-10 shadow-md relative h-[1000px] lg:h-[500px] mx-10">
+    <div style="  outline: none;" id="viewDivcont" class="h-[500px] lg:w-[600px] ">
+      <div id="viewDiv" class="w-[185%] shadow-[5px_0_8px_-4px_rgba(0,0,0,0.25)]"></div>
     </div>
-    <div class="mt-10 text-2xl m-10 w-[500px]">
+
+    <div class="flex">
+      <div id="sel" style="font-family: oswald, sans-serif; writing-mode: vertical-lr;" class="text-slate-700 absolute text-2xl top-[27%] right-0 p-4">
+        SELEZIONA  CENTRALINA
+      </div>
+    <div id="info" style="visibility: hidden;" class="mt-10  m-10 w-[500px] text-md lg:flex-col">
       <h1 style="font-family: oswald, sans-serif;" class="mb-5">INFO CENTRALINA</h1>
       <div class="flex gap-3">
         <h2 class="font-black text-slate-600">Nome stazione: </h2>
@@ -130,42 +135,68 @@
       </div>
 
       <div class="flex gap-3">
-        <h2 id="info" class="font-black text-slate-600">Cartellini</h2>
+        <h2 id="info" class="font-black text-slate-600">Totale Cartelini Elaborati*: </h2>
         <h2 id="numero"></h2>
       </div>
 
       <div class="flex gap-3">
-        <h2 id="info" class="font-black text-slate-600">Span Dati</h2>
+        <h2 id="info" class="font-black text-slate-600">Span Storico Dati:</h2>
+        <h2 id="span"></h2>
+      </div>
+
+      <div class="flex gap-3">
+        <h2 id="info" class="font-black text-slate-600">Stato cartellini:</h2>
         <h2 id="span"></h2>
       </div>
 
 
-      <div class="h-72 -mt-10">
+      <div class="h-72 -mt-12">
         <canvas class="h-52" id="graficoTorta"></canvas>
       </div>
-    </div>
-  </div>
 
-  <div class="flex justify-between w-[1200px] gap-10">
-    <input class="rounded-0" style="display: none;" id="datePicker" type="text" />
+      
+
+      <ul class="text-slate-500 -mt-12">
+        <li class="text-xs">Elaborati: Numero totale di casrtellini processati </li>
+        <li class="text-xs">Zero pioggia: Numero di cartellini per cui non è stata rilevata pioggia.</li>
+        <li  class="text-xs">Discordanti: Dato incoerente o discrepante rispetto al cartellino.</li>
+        <li  class="text-xs">Malfunzionanti: Non ricopre tutta la settimana con dati attendibili / presenza di neve.</li>
+        <li class="text-xs">Attenzionato: Elementi già analizzati e sottoposti a verifica o correzione</li>
+      </ul>
+
+      
+    </div>
+   
+  </div>
+  </div>
+  
+  <div class="flex justify-between w-screen lg:p-0 px-10 lg:w-[1180px] gap-10 flex-col lg:flex-row relative">
+    <div id="datediv" class="absolute right-20 -top-110 lg:left-0 lg:top-0 lg:relative">
+      <input class="rounded-0" style="display: none;" id="datePicker" type="text" />
+    </div>
     <div class="w-full" id="example-table"></div>
   </div>
 
-  <div class="flex gap-10">
-    <div class=" mt-10 shadow-lg border-1   border-gray-200  bg-white">
-      <canvas class="h-80 p-3 pr-5" id="precipitazioni"></canvas>
+  <div class="flex gap-10 lg:w-auto w-screen flex-col lg:flex-row lg:px-0 px-10">
+   
+    <div class=" mt-10 shadow-lg border-1 border-gray-200  bg-white">
+      <canvas class="h-72 p-3 pr-5" id="ietogramma"></canvas>
     </div>
 
-    <div class=" mt-10 shadow-lg border-1   border-gray-200  bg-white">
+    <div class=" mt-10 shadow-lg border-1 border-gray-200  bg-white">
       <canvas class="h-72 p-3 pr-5" id="cumulata"></canvas>
     </div>
 
-    
   </div>
 
-   <div class=" mt-10 shadow-lg border-1   border-gray-200  bg-white">
-      <canvas class="h-72 p-3 pr-5" id="ietogramma"></canvas>
+  <div class="bg-slate-200 h-52 mt-10 p-10">
+    <div class="flex gap-2">
+      <p style="font-family: oswald, sans-serif;"  class="text-slate-600">Media: </p> <p id="media"></p> <p>mm </p>
     </div>
+    <div class="flex gap-2">
+      <p style="font-family: oswald, sans-serif;" class="text-slate-600">Scarto quadratico medio: </p> <p id="SQM"></p> <p>mm </p>
+    </div>
+    <button id="esportaCsvBtn">Scarica</button>
 </body>
 
 </html>
