@@ -6,7 +6,8 @@
   <link rel="stylesheet" href="https://js.arcgis.com/4.27/esri/themes/light/main.css" />
   <link rel="stylesheet" href="./src/airpicker.css" />
   <script src="https://js.arcgis.com/4.27/"></script>
-  <script type="module" src="./src/js/mappadati.js" defer></script>
+  <script type="module" src="./src/js/mappadati.js" async></script>
+  <script type="module" src="./src/js/graphfunctions.js" async></script>
   <style>
     body,
     html {
@@ -116,16 +117,16 @@
 
   <div
     class="flex flex-col lg:flex-row justify-center mt-10 bg-slate-200 lg:w-fit w-screen mb-10 shadow-md relative h-[1000px] lg:h-[500px] mx-10">
-    <div style="  outline: none;" id="viewDivcont" class="h-[500px] lg:w-[600px] ">
-      <div id="viewDiv" class="w-[185%] shadow-[5px_0_8px_-4px_rgba(0,0,0,0.25)]"></div>
+    <div style="  outline: none;" id="viewDivcont" class="appearOC h-[500px] lg:w-[600px] ">
+      <div id="viewDiv" class=" w-[185%] shadow-[5px_0_8px_-4px_rgba(0,0,0,0.25)]"></div>
     </div>
 
     <div class="flex">
       <div id="sel" style="font-family: oswald, sans-serif; writing-mode: vertical-lr;"
-        class="text-slate-700 absolute text-2xl top-[27%] right-0 p-4">
+        class="text-slate-700 absolute text-2xl top-[27%] right-0 p-4 disappearOC">
         SELEZIONA CENTRALINA
       </div>
-      <div id="info" style="visibility: hidden;" class="mt-10  m-10 w-[500px] text-md lg:flex-col">
+      <div id="info" style="visibility: hidden;" class="appearOC mt-10  m-10 w-[500px] text-md lg:flex-col">
         <h1 style="font-family: oswald, sans-serif;" class="mb-5">INFO CENTRALINA</h1>
         <div class="flex gap-3">
           <h2 class="font-black text-slate-600">Nome stazione: </h2>
@@ -173,29 +174,38 @@
     </div>
   </div>
 
+  <div style="display: none;" class="appearOC w-screen px-10 lg:w-[1180px] lg:px-0 flex justify-between">
+    <p>Seleziona range</p>
+    <p>Dati Raw Cartellini</p>
+  </div>
   <div id="tablediv" style="display: none;"
-    class="flex justify-between w-screen lg:p-0 px-10 lg:w-[1180px] gap-10 flex-col lg:flex-row relative">
+    class="appearOC flex justify-between w-screen lg:p-0 px-10 lg:w-[1180px] gap-10 flex-col lg:flex-row relative">
     <div id="datediv" class="absolute right-20 -top-110 lg:left-0 lg:top-0 lg:relative">
       <input class="rounded-0" style="display: none;" id="datePicker" type="text" />
     </div>
     <div class="w-full" id="example-table"></div>
   </div>
 
-  <div style="display: none;" id="graphdiv"
-    class="flex gap-5 lg:w-[1180px] w-screen flex-col lg:flex-row lg:px-0 px-10">
+  <div style="display: none;" class="appearOC w-screen px-10 lg:w-[1180px] lg:px-0 flex justify-between mt-10 mb-2">
+    <p>Ietogramma</p>
+    <p>Cumulata</p>
+  </div>
 
-    <div class=" mt-10 shadow-lg border-1 border-gray-200  bg-white">
+  <div style="display: none;" id="graphdiv"
+    class="appearOC flex gap-5 lg:w-[1180px] w-screen flex-col lg:flex-row lg:px-0 px-10">
+
+    <div class="  shadow-lg border-1 border-gray-200  bg-white">
       <canvas class="h-72 p-3 pr-5" id="ietogramma"></canvas>
     </div>
 
-    <div class="w-full mt-10 shadow-lg border-1 border-gray-200  bg-white">
+    <div class="w-full  shadow-lg border-1 border-gray-200  bg-white">
       <canvas class="h-72 p-3 pr-5" id="cumulata"></canvas>
     </div>
 
   </div>
 
   <div id="statdiv"
-    class=" w-screen lg:w-[1180px] lg:px-0 px-10 h-12 mt-10 p-10 text-lg flex gap-10 justify-between items-center bg-slate-200 shadow-2xl lg:px-10"
+    class="appearOC  w-screen lg:w-[1180px] lg:px-0 px-10 h-12 mt-10 p-10 text-lg flex gap-10 justify-between items-center bg-slate-200 shadow-2xl lg:px-10"
     style="font-family: oswald, sans-serif; display: none;">
     <div class="flex gap-2">
       <p style="font-family: oswald, sans-serif;" class="">Media: </p>
@@ -213,10 +223,7 @@
         class=" px-4 h-12 shadow-xl hover:scale-105 transform transition-all cursor-pointer bg-instblue text-white">Scarica
         dati</button>
     </div>
-
   </div>
-
-
 </body>
 
 </html>
