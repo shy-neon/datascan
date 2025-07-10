@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="it">
+
 <head>
   <meta charset="UTF-8" />
   <title>Mappa + Tabella Esri</title>
@@ -10,7 +11,10 @@
   <script type="module" src="./src/main.js"></script>
   <style>
     #viewDiv {
-      padding: 0; margin: 0; height: 60vh; width: 100%;
+      padding: 0;
+      margin: 0;
+      height: 60vh;
+      width: 100%;
     }
   </style>
 </head>
@@ -19,9 +23,10 @@
   <inst class="w-full">
     <div class="bg-instblue w-full h-fit p-3 flex justify-center items-center">
       <div class="flex w-[60%]  justify-around items-center">
-      <img src="./src/images/loghi/IT Finanziato dall'Unione europea_tracciato_BLUE_WHITE.png" alt="logo UE" class="h-12">
-      <img src="./src/images/loghi/LOGO_UniversitaRicerca_tracciato_WHITE.png" alt="logo miur" class="h-10">
-      <img src="./src/images/loghi/italiadomani-tracciato-bianco2.PNG" alt="logo UE" class="h-12">
+        <img src="./src/images/loghi/IT Finanziato dall'Unione europea_tracciato_BLUE_WHITE.png" alt="logo UE"
+          class="h-12">
+        <img src="./src/images/loghi/LOGO_UniversitaRicerca_tracciato_WHITE.png" alt="logo miur" class="h-10">
+        <img src="./src/images/loghi/italiadomani-tracciato-bianco2.PNG" alt="logo UE" class="h-12">
       </div>
     </div>
   </inst>
@@ -30,32 +35,82 @@
 
   <navbar style="font-family: 'Oswald', sans-serif" class="flex flex-col w-full justify-around mt-5 text-gray-600">
     <div class="flex justify-around w-full">
-    <ul class="flex gap-10">
-      <li class="text-3xl text-blue-900 relative after:bg-blue-900 after:absolute after:h-1 after:w-0 after:top-9 after:left-0 hover:after:w-full after:transition-all after:duration-400 cursor-pointer">HOME</li>
-      <a href="./dati.html"><li  class="text-3xl relative after:bg-gray-600 after:absolute after:h-1 after:w-0 after:top-9 after:left-0 hover:after:w-full after:transition-all after:duration-400 cursor-pointer">DATI</li></a>
-      <li class="text-3xl relative after:bg-gray-600 after:absolute after:h-1 after:w-0 after:top-9 after:left-0 hover:after:w-full after:transition-all after:duration-400 cursor-pointer">ABOUT US</li>
-      <li class="text-3xl relative after:bg-gray-600 after:absolute after:h-1 after:w-0 after:top-9 after:left-0 hover:after:w-full after:transition-all after:duration-400 cursor-pointer">CONTATTI</li>
-    </ul>
+      <ul class="flex gap-10">
+        <li
+          class="text-3xl text-blue-900 relative after:bg-blue-900 after:absolute after:h-1 after:w-0 after:top-9 after:left-0 hover:after:w-full after:transition-all after:duration-400 cursor-pointer">
+          HOME</li>
+        <a href="./dati.html">
+          <li
+            class="text-3xl relative after:bg-gray-600 after:absolute after:h-1 after:w-0 after:top-9 after:left-0 hover:after:w-full after:transition-all after:duration-400 cursor-pointer">
+            DATI</li>
+        </a>
+        <li
+          class="text-3xl relative after:bg-gray-600 after:absolute after:h-1 after:w-0 after:top-9 after:left-0 hover:after:w-full after:transition-all after:duration-400 cursor-pointer">
+          ABOUT US</li>
+        <li
+          class="text-3xl relative after:bg-gray-600 after:absolute after:h-1 after:w-0 after:top-9 after:left-0 hover:after:w-full after:transition-all after:duration-400 cursor-pointer">
+          CONTATTI</li>
+      </ul>
 
-    <ul class="flex gap-10 items-center">
-      <svg class="h-8" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="64" height="64" viewBox="0,0,256,256">
-      <g fill-opacity="0.6902" fill="#000000" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><g transform="scale(4,4)"><path d="M21.58008,7c-8.039,0 -14.58008,6.54494 -14.58008,14.58594v20.83203c0,8.04 6.54494,14.58203 14.58594,14.58203h20.83203c8.04,0 14.58203,-6.54494 14.58203,-14.58594v-20.83398c0,-8.039 -6.54494,-14.58008 -14.58594,-14.58008zM47,15c1.104,0 2,0.896 2,2c0,1.104 -0.896,2 -2,2c-1.104,0 -2,-0.896 -2,-2c0,-1.104 0.896,-2 2,-2zM32,19c7.17,0 13,5.83 13,13c0,7.17 -5.831,13 -13,13c-7.17,0 -13,-5.831 -13,-13c0,-7.169 5.83,-13 13,-13zM32,23c-4.971,0 -9,4.029 -9,9c0,4.971 4.029,9 9,9c4.971,0 9,-4.029 9,-9c0,-4.971 -4.029,-9 -9,-9z"></path></g></g>
-      </svg>
-      
-      
-      <svg class="h-7.5" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="50" height="50" viewBox="0,0,256,256">
-      <g fill-opacity="0.6902" fill="#000000" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><g transform="scale(5.12,5.12)"><path d="M41,4h-32c-2.76,0 -5,2.24 -5,5v32c0,2.76 2.24,5 5,5h32c2.76,0 5,-2.24 5,-5v-32c0,-2.76 -2.24,-5 -5,-5zM17,20v19h-6v-19zM11,14.47c0,-1.4 1.2,-2.47 3,-2.47c1.8,0 2.93,1.07 3,2.47c0,1.4 -1.12,2.53 -3,2.53c-1.8,0 -3,-1.13 -3,-2.53zM39,39h-6c0,0 0,-9.26 0,-10c0,-2 -1,-4 -3.5,-4.04h-0.08c-2.42,0 -3.42,2.06 -3.42,4.04c0,0.91 0,10 0,10h-6v-19h6v2.56c0,0 1.93,-2.56 5.81,-2.56c3.97,0 7.19,2.73 7.19,8.26z"></path></g></g>
-      </svg>
-      
-      
-      <svg class="h-8" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="50" height="50" viewBox="0,0,256,256">
-      <g fill-opacity="0.6902" fill="#000000" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><g transform="scale(5.12,5.12)"><path d="M11,4c-3.866,0 -7,3.134 -7,7v28c0,3.866 3.134,7 7,7h28c3.866,0 7,-3.134 7,-7v-28c0,-3.866 -3.134,-7 -7,-7zM13.08594,13h7.9375l5.63672,8.00977l6.83984,-8.00977h2.5l-8.21094,9.61328l10.125,14.38672h-7.93555l-6.54102,-9.29297l-7.9375,9.29297h-2.5l9.30859,-10.89648zM16.91406,15l14.10742,20h3.06445l-14.10742,-20z"></path></g></g>
-      </svg>
-      
-      <svg class="h-9" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="64" height="64" viewBox="0,0,256,256">
-      <g fill-opacity="0.6902" fill="#000000" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><g transform="scale(4,4)"><path d="M32,6c-14.358,0 -26,11.642 -26,26c0,13.035 9.603,23.799 22.113,25.679v-18.789h-6.433v-6.834h6.433v-4.548c0,-7.529 3.668,-10.833 9.926,-10.833c2.996,0 4.583,0.223 5.332,0.323v5.965h-4.268c-2.656,0 -3.584,2.52 -3.584,5.358v3.735h7.785l-1.055,6.834h-6.73v18.843c12.69,-1.72 22.481,-12.57 22.481,-25.733c0,-14.358 -11.641,-26 -26,-26z"></path></g></g>
-      </svg>
-    </ul>
+      <ul class="flex gap-10 items-center">
+        <svg class="h-8" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="64" height="64"
+          viewBox="0,0,256,256">
+          <g fill-opacity="0.6902" fill="#000000" fill-rule="nonzero" stroke="none" stroke-width="1"
+            stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray=""
+            stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none"
+            style="mix-blend-mode: normal">
+            <g transform="scale(4,4)">
+              <path
+                d="M21.58008,7c-8.039,0 -14.58008,6.54494 -14.58008,14.58594v20.83203c0,8.04 6.54494,14.58203 14.58594,14.58203h20.83203c8.04,0 14.58203,-6.54494 14.58203,-14.58594v-20.83398c0,-8.039 -6.54494,-14.58008 -14.58594,-14.58008zM47,15c1.104,0 2,0.896 2,2c0,1.104 -0.896,2 -2,2c-1.104,0 -2,-0.896 -2,-2c0,-1.104 0.896,-2 2,-2zM32,19c7.17,0 13,5.83 13,13c0,7.17 -5.831,13 -13,13c-7.17,0 -13,-5.831 -13,-13c0,-7.169 5.83,-13 13,-13zM32,23c-4.971,0 -9,4.029 -9,9c0,4.971 4.029,9 9,9c4.971,0 9,-4.029 9,-9c0,-4.971 -4.029,-9 -9,-9z">
+              </path>
+            </g>
+          </g>
+        </svg>
+
+
+        <svg class="h-7.5" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="50" height="50"
+          viewBox="0,0,256,256">
+          <g fill-opacity="0.6902" fill="#000000" fill-rule="nonzero" stroke="none" stroke-width="1"
+            stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray=""
+            stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none"
+            style="mix-blend-mode: normal">
+            <g transform="scale(5.12,5.12)">
+              <path
+                d="M41,4h-32c-2.76,0 -5,2.24 -5,5v32c0,2.76 2.24,5 5,5h32c2.76,0 5,-2.24 5,-5v-32c0,-2.76 -2.24,-5 -5,-5zM17,20v19h-6v-19zM11,14.47c0,-1.4 1.2,-2.47 3,-2.47c1.8,0 2.93,1.07 3,2.47c0,1.4 -1.12,2.53 -3,2.53c-1.8,0 -3,-1.13 -3,-2.53zM39,39h-6c0,0 0,-9.26 0,-10c0,-2 -1,-4 -3.5,-4.04h-0.08c-2.42,0 -3.42,2.06 -3.42,4.04c0,0.91 0,10 0,10h-6v-19h6v2.56c0,0 1.93,-2.56 5.81,-2.56c3.97,0 7.19,2.73 7.19,8.26z">
+              </path>
+            </g>
+          </g>
+        </svg>
+
+
+        <svg class="h-8" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="50" height="50"
+          viewBox="0,0,256,256">
+          <g fill-opacity="0.6902" fill="#000000" fill-rule="nonzero" stroke="none" stroke-width="1"
+            stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray=""
+            stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none"
+            style="mix-blend-mode: normal">
+            <g transform="scale(5.12,5.12)">
+              <path
+                d="M11,4c-3.866,0 -7,3.134 -7,7v28c0,3.866 3.134,7 7,7h28c3.866,0 7,-3.134 7,-7v-28c0,-3.866 -3.134,-7 -7,-7zM13.08594,13h7.9375l5.63672,8.00977l6.83984,-8.00977h2.5l-8.21094,9.61328l10.125,14.38672h-7.93555l-6.54102,-9.29297l-7.9375,9.29297h-2.5l9.30859,-10.89648zM16.91406,15l14.10742,20h3.06445l-14.10742,-20z">
+              </path>
+            </g>
+          </g>
+        </svg>
+
+        <svg class="h-9" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="64" height="64"
+          viewBox="0,0,256,256">
+          <g fill-opacity="0.6902" fill="#000000" fill-rule="nonzero" stroke="none" stroke-width="1"
+            stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray=""
+            stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none"
+            style="mix-blend-mode: normal">
+            <g transform="scale(4,4)">
+              <path
+                d="M32,6c-14.358,0 -26,11.642 -26,26c0,13.035 9.603,23.799 22.113,25.679v-18.789h-6.433v-6.834h6.433v-4.548c0,-7.529 3.668,-10.833 9.926,-10.833c2.996,0 4.583,0.223 5.332,0.323v5.965h-4.268c-2.656,0 -3.584,2.52 -3.584,5.358v3.735h7.785l-1.055,6.834h-6.73v18.843c12.69,-1.72 22.481,-12.57 22.481,-25.733c0,-14.358 -11.641,-26 -26,-26z">
+              </path>
+            </g>
+          </g>
+        </svg>
+      </ul>
     </div>
     <div class="h-0.3 bg-black"></div>
   </navbar>
@@ -68,28 +123,46 @@
         <p style="font-family: 'Oswald', sans-serif" class="text-gray-500 ">DI DATI ORARI</p>
       </div>
       <div class="mt-10">
-        <p id="stat" style="font-family: 'Oswald', sans-serif" id="stat" class="text-instblue text-6xl w-[100px] mb-2">2,543</p>
+        <p id="stat" style="font-family: 'Oswald', sans-serif" id="stat" class="text-instblue text-6xl w-[100px] mb-2">
+          2,543</p>
         <p style="font-family: 'Oswald', sans-serif" class="text-gray-500 ">CARTELLINI </p>
       </div>
     </div>
     <div class="w-[40%] text-xl text-justify">
-      Datascan è un progetto istituzionale che si occupa della raccolta e digitalizzazione dei dati pluviometrici di 21 stazioni, con serie storiche continue dal 1970 ad oggi. Attraverso questa piattaforma, gli utenti possono consultare i dati originali, acquisiti tramite cartellini pluviometrici scannerizzati e digitalizzati, a supporto di studi scientifici, analisi climatiche e monitoraggio ambientale. Il sito garantisce un accesso chiaro e diretto alle informazioni.
+      Datascan è un progetto istituzionale che si occupa della raccolta e digitalizzazione dei dati pluviometrici di 21
+      stazioni, con serie storiche continue dal 1970 ad oggi. Attraverso questa piattaforma, gli utenti possono
+      consultare i dati originali, acquisiti tramite cartellini pluviometrici scannerizzati e digitalizzati, a supporto
+      di studi scientifici, analisi climatiche e monitoraggio ambientale. Il sito garantisce un accesso chiaro e diretto
+      alle informazioni.
     </div>
   </div>
 
   <div class="flex flex-col mt-20 bg-blue-100 w-full items-center">
     <div class="w-[70%] mt-15">
       <div class="flex mt-10 gap-10">
-      <div class="w-80 h-60 bg-center outline-4 outline-[rgba(255,255,255,0.6)] shadow-2xl  bg-cover hover:scale-[120%] transform transition duration-400 ease-in-out"  style="background-image: url('./src/images/prof/prof3.jpg');"></div>
-      <div class="w-80 h-60 bg-center outline-4 outline-[rgba(255,255,255,0.6)] bg-cover hover:scale-[120%] transform transition duration-300 ease-in-out"  style="background-image: url('./src/images/prof/prof2.jpg');"></div>
-      <div class="w-80 h-60 bg-center outline-4 outline-[rgba(255,255,255,0.6)] bg-cover hover:scale-[120%] transform transition duration-300 ease-in-out"  style="background-image: url('./src/images/prof/prof1.jpg');"></div>
-      <div class="w-80 h-60 bg-center outline-4 outline-[rgba(255,255,255,0.6)] bg-cover hover:scale-[120%] transform transition duration-300 ease-in-out"  style="background-image: url('./src/images/prof/prof4.jpg');"></div>
+        <div
+          class="w-80 h-60 bg-center outline-4 outline-[rgba(255,255,255,0.6)] shadow-2xl  bg-cover hover:scale-[120%] transform transition duration-400 ease-in-out"
+          style="background-image: url('./src/images/prof/prof3.jpg');"></div>
+        <div
+          class="w-80 h-60 bg-center outline-4 outline-[rgba(255,255,255,0.6)] bg-cover hover:scale-[120%] transform transition duration-300 ease-in-out"
+          style="background-image: url('./src/images/prof/prof2.jpg');"></div>
+        <div
+          class="w-80 h-60 bg-center outline-4 outline-[rgba(255,255,255,0.6)] bg-cover hover:scale-[120%] transform transition duration-300 ease-in-out"
+          style="background-image: url('./src/images/prof/prof1.jpg');"></div>
+        <div
+          class="w-80 h-60 bg-center outline-4 outline-[rgba(255,255,255,0.6)] bg-cover hover:scale-[120%] transform transition duration-300 ease-in-out"
+          style="background-image: url('./src/images/prof/prof4.jpg');"></div>
+      </div>
+      <div class="mt-10">
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa, rem. Et non repellat ad eum numquam corporis
+        nemo. Sit atque nostrum quos ullam vitae ipsa reprehenderit, voluptatem quibusdam eos qui. Lorem, ipsum dolor
+        sit amet consectetur adipisicing elit. Earum omnis esse iusto impedit accusamus exercitationem reiciendis
+        excepturi distinctio quas magni, et perspiciatis! Alias, ullam nihil. Quidem necessitatibus atque ex libero?
+        lorem
+      </div>
     </div>
-    <div class="mt-10">
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa, rem. Et non repellat ad eum numquam corporis nemo. Sit atque nostrum quos ullam vitae ipsa reprehenderit, voluptatem quibusdam eos qui. Lorem, ipsum dolor sit amet consectetur adipisicing elit. Earum omnis esse iusto impedit accusamus exercitationem reiciendis excepturi distinctio quas magni, et perspiciatis! Alias, ullam nihil. Quidem necessitatibus atque ex libero? lorem
-    </div>
-  </div>
- 
-  
+
+
 </body>
+
 </html>

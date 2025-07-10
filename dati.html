@@ -173,14 +173,16 @@
     </div>
   </div>
 
-  <div class="flex justify-between w-screen lg:p-0 px-10 lg:w-[1180px] gap-10 flex-col lg:flex-row relative">
+  <div id="tablediv" style="display: none;"
+    class="flex justify-between w-screen lg:p-0 px-10 lg:w-[1180px] gap-10 flex-col lg:flex-row relative">
     <div id="datediv" class="absolute right-20 -top-110 lg:left-0 lg:top-0 lg:relative">
       <input class="rounded-0" style="display: none;" id="datePicker" type="text" />
     </div>
     <div class="w-full" id="example-table"></div>
   </div>
 
-  <div class="flex gap-5 lg:w-[1180px] w-screen flex-col lg:flex-row lg:px-0 px-10">
+  <div style="display: none;" id="graphdiv"
+    class="flex gap-5 lg:w-[1180px] w-screen flex-col lg:flex-row lg:px-0 px-10">
 
     <div class=" mt-10 shadow-lg border-1 border-gray-200  bg-white">
       <canvas class="h-72 p-3 pr-5" id="ietogramma"></canvas>
@@ -192,9 +194,9 @@
 
   </div>
 
-  <div
+  <div id="statdiv"
     class=" w-screen lg:w-[1180px] lg:px-0 px-10 h-12 mt-10 p-10 text-lg flex gap-10 justify-between items-center bg-slate-200 shadow-2xl lg:px-10"
-    style="font-family: oswald, sans-serif;">
+    style="font-family: oswald, sans-serif; display: none;">
     <div class="flex gap-2">
       <p style="font-family: oswald, sans-serif;" class="">Media: </p>
       <p style="font-family: oswald, sans-serif;" class="text-instblue" id="media"></p>

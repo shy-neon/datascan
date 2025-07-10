@@ -14,6 +14,7 @@ import 'tabulator-tables/dist/css/tabulator.min.css';
 import { resolve } from 'chart.js/helpers';
 import 'chartjs-adapter-date-fns';
 import { get } from 'jquery';
+import Layer from '@arcgis/core/layers/Layer';
 
 const ctx = document.getElementById('graficoTorta').getContext('2d');
 const cumul = document.getElementById('cumulata').getContext('2d');
@@ -26,6 +27,9 @@ const dat = document.getElementById('datediv')
 const med = document.getElementById('media')
 const scart = document.getElementById('SQM')
 
+const tablediv = document.getElementById("tablediv")
+const tabdiv = document.getElementById("graphdiv")
+const statdiv = document.getElementById("statdiv")
 
 let datas = [];
 
@@ -131,19 +135,19 @@ const view = new MapView({
 view.when(() => {
   // Trova il layer interessato
   const layer = view.map.layers.find(l => l.title === "Centraline");
+  layer.queryFeatures({
+    where: "1=1",
+    outFields: ["*"],
+    returnGeometry: false
+  }).then(result => {
+    let dati = result.features.map(f => ({ ...f.attributes }));
+    console.log(dati);
+  });
+
 
   if (layer) {
     layer.popupEnabled = false;
 
-
-    const inizio = new Date('1941-01-01')
-    const fine = new Date('1941-01-03')
-    console.log(inizio)
-    console.log(fine)
-
-
-
-    // Cattura il click sulla mappa
     view.on("click", async (event) => {
       const response = await view.hitTest(event);
       const result = response.results.find(r => r.graphic?.layer === layer);
@@ -151,7 +155,6 @@ view.when(() => {
       if (result) {
         const clickedGraphic = result.graphic;
 
-        // Usa OBJECTID per ricaricare la feature completa
         const objectId = clickedGraphic.attributes[layer.objectIdField];
 
         const query = layer.createQuery();
@@ -181,7 +184,9 @@ view.when(() => {
           tabel = webmap.tables.find(t => t.title === fullFeature.attributes["ID_Centralina"])
           console.log(tabel)
           dat.style.display = "absolute"
-
+          statdiv.style.display = "flex"
+          tablediv.style.display = "flex"
+          tabdiv.style.display = "flex"
 
           tabella(tabel, "1=1")
           calcolaSpan(tabel)
@@ -495,6 +500,15 @@ function graficocumulata(graf, tabel, where) {
         }]
       },
       options: {
+        plugins: {
+          dragData: {
+            round: 1,
+            showTooltip: true,
+            onDragEnd: (e, datasetIndex, index, value) => {
+              console.log(`Nuovo valore: ${value}`);
+            }
+          }
+        },
         parsing: false,
         scales: {
           x: {
