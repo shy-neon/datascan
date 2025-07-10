@@ -61,27 +61,7 @@ webmap.load().then(() => {
 
 
 
-        let tabella = datiTabella.map(d => ({
-            data: new Date(d.DataOra).toString().substring(0, 15),
-            mm: d.Pioggia_mm,
-            qualita: d.Qualita,
-            cartellino: d.Cartellino
-        }))
 
-        console.log(tabella);
-
-        const table = new Tabulator("#example-table", {
-            data: tabella,
-            height: "300px",
-            columns: [
-                { title: "Data", field: "data" },
-                { title: "mm Pioggia", field: "mm" },
-                { title: "Qualita", field: "qualita" },
-                { title: "Cartellino", field: "cartellino" }
-            ],
-
-            layout: "fitColumns",
-        });
 
 
     });

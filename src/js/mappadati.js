@@ -27,6 +27,9 @@ const med = document.getElementById('media')
 const scart = document.getElementById('SQM')
 
 
+let datas = [];
+
+
 function calcolaMediaPioggia(array) {
   if (!array.length) {
     throw new Error("Array vuoto");
@@ -79,12 +82,14 @@ function calcolaMediaESqmPioggia(array) {
 if (window.matchMedia("(min-width:1080px)").matches) {
   mappa.style.width = "185%"
   dat.style.display = "hidden"
+
 } else {
   console.log("Siamo sotto sm (base)");
   mappa.style.width = "100%"
   mappa.style.height = "190%";
   dat.style.display = "none"
-
+  sel.style.display = "none";
+  mappa.style.boxShadow = "0px 5px 8px -4px rgba(0, 0, 0, 0.25)"
 }
 
 let tabel = null;
@@ -92,17 +97,17 @@ let tabel = null;
 let cal = flatpickr("#datePicker", {
   inline: true,
   mode: "range",
-   locale: Italian,
-  onChange: function(selectedDates, dateStr, instance) {
+  locale: Italian,
+  onChange: function (selectedDates, dateStr, instance) {
     console.log(dateStr)
-    if(selectedDates.length >= 2){
-      let query = ("DataOra BETWEEN '" + dateStr.substring(0,10) + "' AND '" +  dateStr.substring(14,25) + "'")
+    if (selectedDates.length >= 2) {
+      let query = ("DataOra BETWEEN '" + dateStr.substring(0, 10) + "' AND '" + dateStr.substring(14, 25) + "'")
       console.log(query)
       graficocumulata(cumul, tabel, query)
       graficoietogramma(iet, tabel, query)
-      if(query == null){
+      if (query == null) {
         tabella(tabel, "1=1")
-      }else {
+      } else {
         tabella(tabel, query)
       }
     }
@@ -169,24 +174,24 @@ view.when(() => {
           const cartellini = document.getElementById("numero")
           cartellini.innerHTML = fullFeature.attributes["Cart_Elaborati"]
 
-          
+
           grafico([fullFeature.attributes["Attenzionati"], fullFeature.attributes["Malfunzionanti"], fullFeature.attributes["Zero_Pioggia"], fullFeature.attributes["Discordanti"], (fullFeature.attributes["Cart_Elaborati"] - fullFeature.attributes["Attenzionati"] - fullFeature.attributes["Malfunzionanti"] - fullFeature.attributes["Zero_Pioggia"] - fullFeature.attributes["Discordanti"])], ctx)
 
           console.log(fullFeature.attributes["ID_Centralina"])
           tabel = webmap.tables.find(t => t.title === fullFeature.attributes["ID_Centralina"])
           console.log(tabel)
-           dat.style.display = "absolute"
+          dat.style.display = "absolute"
 
-          
+
           tabella(tabel, "1=1")
           calcolaSpan(tabel)
 
           console.log(getmindate(tabel))
-          
-          
+
+
           if (window.matchMedia("(min-width:1080px)").matches) {
-            
-            
+            sel.style.display = "none"
+
           } else {
             mappa.style.height = "100%"
             dat.style.display = "block"
@@ -194,10 +199,10 @@ view.when(() => {
           }
 
           viewDiv.style.width = "100%";
-          info.style.visibility ="visible";
-          sel.style.visibility ="hidden";
+          info.style.visibility = "visible";
+          sel.style.visibility = "hidden";
           setMinDateFromAPI();
-          
+
           graficocumulata(cumul, tabel, "1=1")
           graficoietogramma(iet, tabel, "1=1")
         }
@@ -211,11 +216,11 @@ function calcolaSpan(tabella) {
   let ultimoRecord;
   let primorecord;
   tabella.queryFeatures({
-    where: "1=1", 
+    where: "1=1",
     outFields: ["*"],
     orderByFields: ["OBJECTID DESC"],
     returnGeometry: false,
-    num: 1 
+    num: 1
   }).then((result) => {
     if (result.features.length > 0) {
       ultimoRecord = result.features[0].attributes;
@@ -223,15 +228,15 @@ function calcolaSpan(tabella) {
         where: "1=1",
         outFields: ["*"],
         returnGeometry: false,
-        num: 1 
+        num: 1
       }).then((result) => {
         if (result.features.length > 0) {
           primorecord = result.features[0].attributes;
           console.log("primo record:", primorecord);
           console.log("Ultimo record:", ultimoRecord);
-          const spanval = (formattaData( new Date(primorecord.DataOra)) + " ~ " + formattaData( new Date(ultimoRecord.DataOra)))
+          const spanval = (formattaData(new Date(primorecord.DataOra)) + " ~ " + formattaData(new Date(ultimoRecord.DataOra)))
           span.innerHTML = spanval
-          return [formattaData( new Date(primorecord.DataOra)), formattaData( new Date(ultimoRecord.DataOra))]
+          return [formattaData(new Date(primorecord.DataOra)), formattaData(new Date(ultimoRecord.DataOra))]
         } else {
           console.log("Nessun record trovato.");
         }
@@ -242,7 +247,7 @@ function calcolaSpan(tabella) {
     }
   })
 
- 
+
 }
 
 function tabella(tabel, where) {
@@ -253,7 +258,7 @@ function tabella(tabel, where) {
     returnGeometry: false
   }).then(result => {
     datiTabella = result.features.map(f => ({ ...f.attributes }));
-
+    datas = datiTabella
     calcolaMediaESqmPioggia(datiTabella);
 
     let tabellasist = datiTabella.map(d => ({
@@ -264,7 +269,7 @@ function tabella(tabel, where) {
     }))
 
     console.log(tabellasist);
-    
+
     const table = new Tabulator("#example-table", {
       data: tabellasist,
       height: "300px",
@@ -272,7 +277,13 @@ function tabella(tabel, where) {
         { title: "Data", field: "data" },
         { title: "mm Pioggia", field: "mm" },
         { title: "Qualita", field: "qualita" },
-        { title: "Cartellino", field: "cartellino" }
+        {
+          title: "Cartellino",
+          formatter: function (cell, formatterParams) {
+            let row = cell.getRow().getData(); // dati di riga
+            return `<a href="https://datascan.it/DatiCentraline/Bovolenta/${row.cartellino}.jpg" target="_blank">${row.cartellino}</a>`;
+          }
+        }
       ],
 
       layout: "fitColumns",
@@ -295,7 +306,7 @@ function grafico(dati, ctx) {
     data: {
       labels: ['Attenzionare', 'Malfunzionanti', 'Zero Pioggia', 'Discordanti', 'Elaborati'],
       datasets: [{
-        
+
         data: dati,
         backgroundColor: [
           'rgba(96, 165, 250, 0.6)',   // funzionanti
@@ -342,14 +353,14 @@ function graficoPrecipitazione(graf, tabel, where) {
 
   if (existingChart) {
     tabel.queryFeatures({
-    where: where,
-    outFields: ["*"],
-    returnGeometry: false
+      where: where,
+      outFields: ["*"],
+      returnGeometry: false
     }).then(result => {
       datiTabella = result.features.map(f => ({ ...f.attributes }));
       existingChart.data.datasets[0].data = pergiorno(datiTabella);
       existingChart.update();
-    return;
+      return;
     });
     return;
   }
@@ -366,51 +377,51 @@ function graficoPrecipitazione(graf, tabel, where) {
     }))
 
     const graficoTorta = new Chart(graf, {
-    type: 'bar',
-    data: {
-      labels: [],
-      datasets: [{
-        label: 'Pioggia in mm',
-        data: pergiorno(datiTabella),
-        backgroundColor: '#1266CD',
-        borderWidth: 0
-      }]
-    },
-    options: {
-      parsing: false,
-      scales:{
-        x: {
-          type: 'time',
-          time: {
-            unit: 'day',
-          }
-        },
-        y: {
-          title: {
-            display: true,
-            text: 'mm'
+      type: 'bar',
+      data: {
+        labels: [],
+        datasets: [{
+          label: 'Pioggia in mm',
+          data: pergiorno(datiTabella),
+          backgroundColor: '#1266CD',
+          borderWidth: 0
+        }]
+      },
+      options: {
+        parsing: false,
+        scales: {
+          x: {
+            type: 'time',
+            time: {
+              unit: 'day',
+            }
+          },
+          y: {
+            title: {
+              display: true,
+              text: 'mm'
+            }
           }
         }
-      }
-    },
-    plugins: [shadowPlugin]
-  });
+      },
+      plugins: [shadowPlugin]
+    });
   });
 
-  
+
 }
 
-function pergiorno (dati) {
+function pergiorno(dati) {
   let datiarray = [];
   let x;
   let y;
   let giorno = dati[0].Giorno
   let mmgiorno = 0
   dati.forEach(d => {
-    if(d.Giorno == giorno){
+    if (d.Giorno == giorno) {
       mmgiorno = mmgiorno + d.Pioggia_mm
     } else {
-      let dato = {x,y}
+      let dato = { x, y }
       dato.y = mmgiorno;
       dato.x = giorno;
       datiarray.push(dato)
@@ -422,36 +433,36 @@ function pergiorno (dati) {
 }
 
 const shadowPlugin = {
-    id: 'shadowLine',
-    beforeDatasetsDraw(chart, args, options) {
-        const { ctx } = chart;
-        ctx.save();
-        ctx.shadowColor = options.shadowColor || 'rgba(0,0,0,0.3)';
-        ctx.shadowBlur = options.shadowBlur || 10;
-        ctx.shadowOffsetX = options.shadowOffsetX || 0;
-        ctx.shadowOffsetY = options.shadowOffsetY || 4;
-    },
-    afterDatasetsDraw(chart, args, options) {
-        chart.ctx.restore();
-    }
+  id: 'shadowLine',
+  beforeDatasetsDraw(chart, args, options) {
+    const { ctx } = chart;
+    ctx.save();
+    ctx.shadowColor = options.shadowColor || 'rgba(0,0,0,0.3)';
+    ctx.shadowBlur = options.shadowBlur || 10;
+    ctx.shadowOffsetX = options.shadowOffsetX || 0;
+    ctx.shadowOffsetY = options.shadowOffsetY || 4;
+  },
+  afterDatasetsDraw(chart, args, options) {
+    chart.ctx.restore();
+  }
 };
 
 function graficocumulata(graf, tabel, where) {
-  
+
   const existingChart = Chart.getChart("cumulata");
-let datiTabella = [];
+  let datiTabella = [];
   if (existingChart) {
     tabel.queryFeatures({
-    where: where,
-    outFields: ["*"],
-    returnGeometry: false
+      where: where,
+      outFields: ["*"],
+      returnGeometry: false
     }).then(result => {
       datiTabella = result.features.map(f => ({ ...f.attributes }));
       let cumulata = 0;
       let dati = cumula(datiTabella);
       existingChart.data.datasets[0].data = dati;
       existingChart.update();
-    return;
+      return;
     });
     return;
   }
@@ -464,62 +475,62 @@ let datiTabella = [];
     let cumulated = 0;
     datiTabella = result.features.map(f => ({ ...f.attributes }));
     let tabellasist = datiTabella.map(d => {
-    cumulated += d.Pioggia_mm;
-    return {
+      cumulated += d.Pioggia_mm;
+      return {
         x: d.DataOra,
         y: cumulated
-    };
-  });
+      };
+    });
 
     const graficoTorta = new Chart(graf, {
-    type: 'line',
-    data: {
-      labels: [],
-      datasets: [{
-        label: 'Pioggia in mm',
-        data: tabellasist,
-        backgroundColor: '#1266CD',
-        spanGaps: true,
-        borderWidth: 0
-      }]
-    },
-    options: {
-      parsing: false,
-      scales:{
-        x: {
-          type: 'time',
-          time: {
-            unit: 'day',
-          }
-        },
-        y: {
-          title: {
-            display: true,
-            text: 'mm'
+      type: 'line',
+      data: {
+        labels: [],
+        datasets: [{
+          label: 'Pioggia in mm',
+          data: tabellasist,
+          backgroundColor: '#1266CD',
+          spanGaps: true,
+          borderWidth: 0
+        }]
+      },
+      options: {
+        parsing: false,
+        scales: {
+          x: {
+            type: 'time',
+            time: {
+              unit: 'day',
+            }
+          },
+          y: {
+            title: {
+              display: true,
+              text: 'mm'
+            }
           }
         }
-      }
-    },
-  });
+      },
+    });
   });
 
-  
+
 }
 
 function graficoietogramma(graf, tabel, where) {
-  
+
   const existingChart = Chart.getChart("ietogramma");
   let datiTabella = [];
   if (existingChart) {
     tabel.queryFeatures({
-    where: where,
-    outFields: ["*"],
-    returnGeometry: false
+      where: where,
+      outFields: ["*"],
+      returnGeometry: false
     }).then(result => {
       datiTabella = result.features.map(f => ({ ...f.attributes }));
       existingChart.data.datasets[0].data = pergiornoietogramma(datiTabella);
       existingChart.update();
-    return;
+      return;
     });
     return;
   }
@@ -536,52 +547,52 @@ function graficoietogramma(graf, tabel, where) {
     }))
 
     const graficoTorta = new Chart(graf, {
-    type: 'bar',
-    data: {
-      labels: [],
-      datasets: [{
-        label: 'Pioggia in mm',
-        data: pergiornoietogramma(datiTabella),
-        backgroundColor: '#1266CD',
-        borderWidth: 0
-      }]
-    },
-    options: {
-      parsing: false,
-      scales:{
-        x: {
-          type: 'time',
-          time: {
-            unit: 'day',
-          }
-        },
-        y: {
-          title: {
-            display: true,
-            text: 'mm/h'
+      type: 'bar',
+      data: {
+        labels: [],
+        datasets: [{
+          label: 'Pioggia in mm',
+          data: pergiornoietogramma(datiTabella),
+          backgroundColor: '#1266CD',
+          borderWidth: 0
+        }]
+      },
+      options: {
+        parsing: false,
+        scales: {
+          x: {
+            type: 'time',
+            time: {
+              unit: 'day',
+            }
+          },
+          y: {
+            title: {
+              display: true,
+              text: 'mm/h'
+            }
           }
         }
-      }
-    },
-    plugins: [shadowPlugin]
-  });
+      },
+      plugins: [shadowPlugin]
+    });
   });
 
-  
+
 }
 
-function pergiornoietogramma (dati) {
+function pergiornoietogramma(dati) {
   let datiarray = [];
   let x;
   let y;
   let giorno = dati[0].Giorno
   let mmgiorno = 0
   dati.forEach(d => {
-    if(d.Giorno == giorno){
+    if (d.Giorno == giorno) {
       mmgiorno = mmgiorno + d.Pioggia_mm
     } else {
-      let dato = {x,y}
-      dato.y = mmgiorno/24;
+      let dato = { x, y }
+      dato.y = mmgiorno / 24;
       dato.x = giorno;
       datiarray.push(dato)
       giorno = d.Giorno
@@ -592,47 +603,47 @@ function pergiornoietogramma (dati) {
 }
 
 
-function cumula (datiTabella) {
+function cumula(datiTabella) {
   let cumulated = 0;
   let tabellasist = datiTabella.map(d => {
     cumulated += d.Pioggia_mm;
     return {
-        x: d.DataOra,
-        y: cumulated
+      x: d.DataOra,
+      y: cumulated
     };
   });
   return tabellasist
 }
 
 function formattaDataPerQuery(unixTimestamp) {
-   const date = new Date(unixTimestamp); 
+  const date = new Date(unixTimestamp);
 
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0'); 
-    const day = String(date.getDate()).padStart(2, '0');
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
 
-    return `${year}-${month}-${day}`;
+  return `${year}-${month}-${day}`;
 }
 
-function defquery (query) {
-  if(query == null){
+function defquery(query) {
+  if (query == null) {
     return "1=1"
   } else {
     return query
   }
 }
 
-function initdate (table) {
+function initdate(table) {
 
-  if(table == null){
+  if (table == null) {
     cal.jumpToDate(new Date())
   }
   let primorecord;
   table.queryFeatures({
-    where: "1=1", 
+    where: "1=1",
     outFields: ["*"],
     returnGeometry: false,
-    num: 1 
+    num: 1
   }).then((result) => {
     if (result.features.length > 0) {
       primorecord = result.features[0].attributes;
@@ -644,31 +655,31 @@ function initdate (table) {
 }
 
 function formatUnixToDateTime(unixTimestamp) {
-    const date = new Date(unixTimestamp); 
+  const date = new Date(unixTimestamp);
 
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0'); 
-    const day = String(date.getDate()).padStart(2, '0');
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
 
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
 
-    return `${year}-${month}-${day} ${hours}:${minutes}`;
+  return `${year}-${month}-${day} ${hours}:${minutes}`;
 }
 
-function getmindate (table) {
-  if(table == null){
+function getmindate(table) {
+  if (table == null) {
     return "2025-01-01"
   }
   let primorecord
   let result = table.queryFeatures({
-    where: "1=1", 
+    where: "1=1",
     outFields: ["*"],
     returnGeometry: false,
   }).then((result) => {
     if (result.features.length > 0) {
       primorecord = result.features[0].attributes;
-      console.log("mindate."+ formattaDataPerQuery(primorecord.DataOra));
+      console.log("mindate." + formattaDataPerQuery(primorecord.DataOra));
       return formattaDataPerQuery(primorecord.DataOra)
     } else {
       console.log("Nessun record trovato.");
@@ -677,21 +688,21 @@ function getmindate (table) {
   return result
 }
 
-function getmaxdate (table) {
-  if(table == null){
+function getmaxdate(table) {
+  if (table == null) {
     return "2025-01-01"
   }
   let ultimorecord
   let result = table.queryFeatures({
-     where: "1=1", 
+    where: "1=1",
     outFields: ["*"],
     orderByFields: ["OBJECTID DESC"],
     returnGeometry: false,
-    num: 1 
+    num: 1
   }).then((result) => {
     if (result.features.length > 0) {
       ultimorecord = result.features[0].attributes;
-      console.log("mindate."+ formattaDataPerQuery(ultimorecord.DataOra));
+      console.log("mindate." + formattaDataPerQuery(ultimorecord.DataOra));
       return formattaDataPerQuery(ultimorecord.DataOra)
     } else {
       console.log("Nessun record trovato.");
@@ -701,12 +712,12 @@ function getmaxdate (table) {
 }
 
 async function setMinDateFromAPI() {
-  const minDate = await getmindate(tabel); 
+  const minDate = await getmindate(tabel);
   const maxdate = await getmaxdate(tabel)
-  cal.set("minDate", minDate); 
-  cal.set("maxDate", maxdate); 
+  cal.set("minDate", minDate);
+  cal.set("maxDate", maxdate);
   initdate(tabel)
-         
+
 }
 
 function convertToCSV(objArray) {
@@ -739,14 +750,14 @@ document.addEventListener("DOMContentLoaded", () => {
   btn.addEventListener("click", () => {
     console.log("Bottone cliccato!");
     tabel.queryFeatures({
-    where: "1=1",
-    outFields: ["*"],
-    returnGeometry: false
+      where: "1=1",
+      outFields: ["*"],
+      returnGeometry: false
     }).then(result => {
       console.log(tabel)
       let datiTabella = result.features.map(f => ({ ...f.attributes }));
-      downloadCSV(datiTabella, "datiPioggia.csv");
+      downloadCSV(datas, "datiPioggia.csv");
     });
-    
+
   });
 });
