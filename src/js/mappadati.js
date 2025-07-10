@@ -604,11 +604,6 @@ function cumula (datiTabella) {
   return tabellasist
 }
 
-
-function dataselected(){
-  console.log(tabel)
-}
-
 function formattaDataPerQuery(unixTimestamp) {
    const date = new Date(unixTimestamp); 
 
@@ -714,40 +709,44 @@ async function setMinDateFromAPI() {
          
 }
 
-const dati = [
-  { Data: "2025-07-01", Pioggia_mm: 10, Temp: 30 },
-  { Data: "2025-07-02", Pioggia_mm: 5, Temp: 31 },
-  { Data: "2025-07-03", Pioggia_mm: 0, Temp: 29 },
-];
-
-function esportaCSVdaOggetti(arrayOggetti, nomeFile = "dati.csv") {
-  if (!arrayOggetti.length) {
-    alert("Nessun dato da esportare.");
-    return;
-  }
-
-  const intestazioni = Object.keys(arrayOggetti[0]);
-
-  const righe = [
-    intestazioni.join(","), // Header
-    ...arrayOggetti.map(obj =>
-      intestazioni.map(k => JSON.stringify(obj[k] ?? "")).join(",")
-    )
-  ].join("\n");
-
-  const blob = new Blob([righe], { type: "text/csv;charset=utf-8;" });
-  const url = URL.createObjectURL(blob);
-
-  const a = document.getElementById("a");
-  a.href = url;
-  a.download = nomeFile;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+function convertToCSV(objArray) {
+  const array = Array.isArray(objArray) ? objArray : JSON.parse(objArray);
+  const header = Object.keys(array[0]).join(",") + "\n";
+  const rows = array.map(obj => Object.values(obj).join(",")).join("\n");
+  return header + rows;
 }
 
-// Collega al bottone
-document.getElementById("esportaCsvBtn").addEventListener("click", () => {
-  esportaCSVdaOggetti(dati, "dati_pioggia.csv");
+function downloadCSV(array, filename = "data.csv") {
+  const csv = convertToCSV(array);
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement("a");
+  const url = URL.createObjectURL(blob);
+  link.setAttribute("href", url);
+  link.setAttribute("download", filename);
+  link.style.visibility = "hidden";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("DOM pronto");
+  const btn = document.getElementById("download");
+  console.log("Bottone trovato:", btn);
+  console.log(tabel)
+  btn.addEventListener("click", () => {
+    console.log("Bottone cliccato!");
+    tabel.queryFeatures({
+    where: "1=1",
+    outFields: ["*"],
+    returnGeometry: false
+    }).then(result => {
+      console.log(tabel)
+      let datiTabella = result.features.map(f => ({ ...f.attributes }));
+      downloadCSV(datiTabella, "datiPioggia.csv");
+    });
+    
+  });
 });

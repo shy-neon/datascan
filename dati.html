@@ -6,7 +6,7 @@
   <link rel="stylesheet" href="https://js.arcgis.com/4.27/esri/themes/light/main.css" />
   <link rel="stylesheet" href="./src/airpicker.css" />
   <script src="https://js.arcgis.com/4.27/"></script>
-  <script type="module" src="./src/js/mappadati.js" async></script>
+  <script type="module" src="./src/js/mappadati.js" defer></script>
   <style>
     body,
     html {
@@ -196,7 +196,7 @@
     <div class="flex gap-2">
       <p style="font-family: oswald, sans-serif;" class="text-slate-600">Scarto quadratico medio: </p> <p id="SQM"></p> <p>mm </p>
     </div>
-    <button id="esportaCsvBtn">Scarica</button>
+    <button id="download" class=" h-10 w-10 bg-slate-600">Scarica</button>
 </body>
 
 </html>
