@@ -2,21 +2,12 @@ import '../style.css'
 import "@arcgis/map-components/components/arcgis-map";
 
 import "@arcgis/map-components/components/arcgis-zoom";
-import WebMap from "@arcgis/core/WebMap";
-import MapView from "@arcgis/core/views/MapView";
 import { Chart } from 'chart.js/auto';
-import PopupTemplate from "@arcgis/core/PopupTemplate";
-import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
-import { Italian } from "flatpickr/dist/l10n/it.js";
 import { TabulatorFull as Tabulator } from 'tabulator-tables';
 import 'tabulator-tables/dist/css/tabulator.min.css';
-import { resolve } from 'chart.js/helpers';
 import 'chartjs-adapter-date-fns';
-import { get } from 'jquery';
-import Layer from '@arcgis/core/layers/Layer';
 import * as service from "./services.js"
-import * as main from "./mappadati.js"
 
 export let datas = [];
 

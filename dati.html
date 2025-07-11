@@ -7,16 +7,13 @@
   <link rel="stylesheet" href="./src/airpicker.css" />
   <script src="https://js.arcgis.com/4.27/"></script>
   <script type="module" src="./src/js/mappadati.js" async></script>
-  <script type="module" src="./src/js/graphfunctions.js" async></script>
   <style>
-    body,
-    html {
+    body, html {
       width: 100;
     }
 
     #viewDiv {
       height: 100%;
-
       transition: width 0.5s ease, height 0.5s ease;
       width: 100%;
     }
@@ -31,27 +28,35 @@
           class="h-12">
         <img src="./src/images/loghi/LOGO_UniversitaRicerca_tracciato_WHITE.png" alt="logo miur" class="h-10">
         <img src="./src/images/loghi/italiadomani-tracciato-bianco2.PNG" alt="logo UE" class="h-12">
+        <img src="./src/images/loghi/logoInteaBianco2.svg" alt="logo UE" class="h-12">
       </div>
     </div>
   </inst>
 
+
   <navbar style="font-family: 'Oswald', sans-serif" class="flex flex-col w-full justify-around mt-5 text-gray-600">
     <div class="flex justify-around w-full">
       <ul class="flex gap-10">
-        <li
-          class="text-3xl relative after:bg-gray-600 after:absolute after:h-1 after:w-0 after:top-9 after:left-0 hover:after:w-full after:transition-all after:duration-400 cursor-pointer">
-          HOME</li>
+        <a href="./">
+          <li
+            class="text-3xl relative after:bg-gray-600 after:absolute after:h-1 after:w-0 after:top-9 after:left-0 hover:after:w-full after:transition-all after:duration-400 cursor-pointer">
+            HOME</li>
+        </a>
         <a href="./dati.html">
           <li
-            class="text-blue-900 text-3xl relative  after:bg-blue-900 after:absolute after:h-1 after:w-0 after:top-9 after:left-0 hover:after:w-full after:transition-all after:duration-400 cursor-pointer">
-            DATI</li>
+            class="text-3xl relative after:bg-gray-600 after:absolute after:h-1 after:w-0 after:top-9 after:left-0 hover:after:w-full after:transition-all after:duration-400 cursor-pointer">
+            DASHBOARD</li>
         </a>
-        <li
-          class="text-3xl relative after:bg-gray-600 after:absolute after:h-1 after:w-0 after:top-9 after:left-0 hover:after:w-full after:transition-all after:duration-400 cursor-pointer">
-          ABOUT US</li>
-        <li
-          class="text-3xl relative after:bg-gray-600 after:absolute after:h-1 after:w-0 after:top-9 after:left-0 hover:after:w-full after:transition-all after:duration-400 cursor-pointer">
-          CONTATTI</li>
+         <a href="./about.html">
+          <li
+            class="text-3xl relative after:bg-gray-600 after:absolute after:h-1 after:w-0 after:top-9 after:left-0 hover:after:w-full after:transition-all after:duration-400 cursor-pointer">
+            ABOUT US</li>
+        </a>
+         <a href="./contatti.html">
+          <li
+            class="text-3xl relative after:bg-gray-600 after:absolute after:h-1 after:w-0 after:top-9 after:left-0 hover:after:w-full after:transition-all after:duration-400 cursor-pointer">
+            CONTATTI</li>
+        </a>
       </ul>
 
       <ul class="flex gap-10 items-center">
@@ -117,8 +122,8 @@
 
   <div
     class="flex flex-col lg:flex-row justify-center mt-10 bg-slate-200 lg:w-fit w-screen mb-10 shadow-md relative h-[1000px] lg:h-[500px] mx-10">
-    <div style="  outline: none;" id="viewDivcont" class="appearOC h-[500px] lg:w-[600px] ">
-      <div id="viewDiv" class=" w-[185%] shadow-[5px_0_8px_-4px_rgba(0,0,0,0.25)]"></div>
+    <div style="  outline: none;" id="viewDivcont" class=" h-[500px] lg:w-[600px] ">
+      <div style="width: 185%;" id="viewDiv" class=" w-[185%] shadow-[5px_0_8px_-4px_rgba(0,0,0,0.25)]"></div>
     </div>
 
     <div class="flex">
@@ -221,8 +226,15 @@
     <div class="gap-10 flex">
       <button id="download"
         class=" px-4 h-12 shadow-xl hover:scale-105 transform transition-all cursor-pointer bg-instblue text-white">Scarica
-        dati</button>
+        dati selezionati</button>
     </div>
+
+     <div class="gap-10 flex">
+      <button id="download"
+        class=" px-4 h-12 shadow-xl hover:scale-105 transform transition-all cursor-pointer bg-instblue text-white">Scarica tutti i
+        dati Centralina</button>
+    </div>
+    
   </div>
 </body>
 

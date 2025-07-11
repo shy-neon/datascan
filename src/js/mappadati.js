@@ -1,20 +1,15 @@
 import '../style.css'
 import "@arcgis/map-components/components/arcgis-map";
-
 import "@arcgis/map-components/components/arcgis-zoom";
 import WebMap from "@arcgis/core/WebMap";
 import MapView from "@arcgis/core/views/MapView";
-import { Chart } from 'chart.js/auto';
-import PopupTemplate from "@arcgis/core/PopupTemplate";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 import { Italian } from "flatpickr/dist/l10n/it.js";
 import { TabulatorFull as Tabulator } from 'tabulator-tables';
 import 'tabulator-tables/dist/css/tabulator.min.css';
-import { resolve } from 'chart.js/helpers';
 import 'chartjs-adapter-date-fns';
-import { get } from 'jquery';
-import Layer from '@arcgis/core/layers/Layer';
+
 import * as graph from "./graphfunctions.js"
 import * as service from "./services.js"
 
@@ -73,13 +68,23 @@ const webmap = new WebMap({
   portalItem: {
     id: "07696c5b72e64125ae75f65226471f60",
     popupEnabled: false
-  }
+  },
+
 });
 
 const view = new MapView({
   container: "viewDiv",
-  map: webmap
+  map: webmap,
+  
+   constraints: {
+      minZoom: 4,         // livello fisso
+      maxZoom: 4
+  }
 });
+
+view.ui.remove("zoom");
+view.on("drag", (event) => event.stopPropagation());
+
 
 
 view.when(() => {
@@ -197,7 +202,7 @@ function tabella(tabel, where) {
           title: "Cartellino",
           formatter: function (cell, formatterParams) {
             let row = cell.getRow().getData(); // dati di riga
-            return `<a href="https://datascan.it/DatiCentraline/Bovolenta/${row.cartellino}.jpg" target="_blank">${row.cartellino}</a>`;
+            return `<a href="https://datascan.it/cartellini/${row.cartellino}.jpg" target="_blank">${row.cartellino}</a>`;
           }
         }
       ],
@@ -212,9 +217,8 @@ async function setMinDateFromAPI() {
   const maxdate = await service.getmaxdate(tabel)
   cal.set("minDate", minDate);
   cal.set("maxDate", maxdate);
-  service.initdate(tabel)
+  initdate(tabel)
 }
-
 
 const btn = document.getElementById("download");
 
@@ -222,7 +226,6 @@ btn.addEventListener("click", () => {
   console.log("ciao " + tabel)
   downloadCSV(datas, "datiPioggia.csv");
 });
-
 
 function convertToCSV(objArray) {
   const array = Array.isArray(objArray) ? objArray : JSON.parse(objArray);
@@ -243,4 +246,24 @@ function downloadCSV(array, filename = "data.csv") {
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
+}
+
+function initdate(table) {
+    if (table == null) {
+        cal.jumpToDate(new Date())
+    }
+    let primorecord;
+    table.queryFeatures({
+        where: "1=1",
+        outFields: ["*"],
+        returnGeometry: false,
+        num: 1
+    }).then((result) => {
+        if (result.features.length > 0) {
+            primorecord = result.features[0].attributes;
+            cal.jumpToDate(new Date(primorecord.DataOra))
+        } else {
+            console.log("Nessun record trovato.");
+        }
+    })
 }

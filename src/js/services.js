@@ -1,22 +1,9 @@
 import '../style.css'
 import "@arcgis/map-components/components/arcgis-map";
-
 import "@arcgis/map-components/components/arcgis-zoom";
-import WebMap from "@arcgis/core/WebMap";
-import MapView from "@arcgis/core/views/MapView";
-import { Chart } from 'chart.js/auto';
-import PopupTemplate from "@arcgis/core/PopupTemplate";
-import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
-import { Italian } from "flatpickr/dist/l10n/it.js";
-import { TabulatorFull as Tabulator } from 'tabulator-tables';
 import 'tabulator-tables/dist/css/tabulator.min.css';
-import { resolve } from 'chart.js/helpers';
 import 'chartjs-adapter-date-fns';
-import { get } from 'jquery';
-import Layer from '@arcgis/core/layers/Layer';
-import * as graph from "./graphfunctions.js"
-import { cal } from "./mappadati.js"
 
 const med = document.getElementById('media')
 const scart = document.getElementById('SQM')
@@ -161,26 +148,6 @@ export function formattaDataPerQuery(unixTimestamp) {
 
 
 
-export function initdate(table) {
-
-    if (table == null) {
-        cal.jumpToDate(new Date())
-    }
-    let primorecord;
-    table.queryFeatures({
-        where: "1=1",
-        outFields: ["*"],
-        returnGeometry: false,
-        num: 1
-    }).then((result) => {
-        if (result.features.length > 0) {
-            primorecord = result.features[0].attributes;
-            cal.jumpToDate(new Date(primorecord.DataOra))
-        } else {
-            console.log("Nessun record trovato.");
-        }
-    })
-}
 
 export function formatUnixToDateTime(unixTimestamp) {
     const date = new Date(unixTimestamp);
