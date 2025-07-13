@@ -7,13 +7,26 @@
   <link rel="stylesheet" href="https://js.arcgis.com/4.27/esri/themes/light/main.css" />
   <script src="https://js.arcgis.com/4.27/"></script>
   <script src="./src/js/heromap.js" async></script>
-  <script src="./src/js/main.js" async></script>
+  <script src="./src/js/main.js" defer></script>
   <script type="module" src="./src/main.js"></script>
   <style>
     #viewDiv {
       padding: 0;
       margin: 0;
-      height: 40vh;
+      height: 100%;
+      width: 100%;
+    }
+
+    .prof {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .selected {
+      scale: 1.10;
+
+    }
+
+    .selected::after {
       width: 100%;
     }
   </style>
@@ -22,7 +35,7 @@
 <body class="flex flex-col justify-around items-center">
   <inst class="w-full">
     <div class="bg-instblue w-full h-fit p-3 flex justify-center items-center">
-      <div class="flex w-[60%]  justify-around items-center">
+      <div class="flex w-[80%]  justify-around items-center">
         <img src="./src/images/loghi/IT Finanziato dall'Unione europea_tracciato_BLUE_WHITE.png" alt="logo UE"
           class="h-12">
         <img src="./src/images/loghi/LOGO_UniversitaRicerca_tracciato_WHITE.png" alt="logo miur" class="h-10">
@@ -32,14 +45,19 @@
     </div>
   </inst>
 
-  <div id="viewDiv"></div>
+  <div class="w-full h-96 overflow-clip relative">
+    <img class="absolute top-[35%] h-32 z-100 left-32"
+      src="./src/images/loghi/IT Finanziato dall'Unione europea_tracciato_BLUE_WHITE.png" alt="">
+    <div id="viewDiv"></div>
+  </div>
 
-  <navbar style="font-family: 'Oswald', sans-serif" class="flex flex-col w-full justify-around mt-5 text-gray-600">
+  <navbar style="font-family: 'Oswald', sans-serif"
+    class="sticky top-0 bg-gray-50 flex flex-col w-full justify-around py-5 text-gray-600">
     <div class="flex justify-around w-full">
       <ul class="flex gap-10">
         <a href="./">
           <li
-            class="text-3xl relative after:bg-gray-600 after:absolute after:h-1 after:w-0 after:top-9 after:left-0 hover:after:w-full after:transition-all after:duration-400 cursor-pointer">
+            class="text-3xl text-instblue relative after:bg-instblue after:absolute after:h-1  after:top-9 after:left-0 after:w-full after:transition-all after:duration-400 cursor-pointer">
             HOME</li>
         </a>
         <a href="./dati.html">
@@ -47,19 +65,19 @@
             class="text-3xl relative after:bg-gray-600 after:absolute after:h-1 after:w-0 after:top-9 after:left-0 hover:after:w-full after:transition-all after:duration-400 cursor-pointer">
             DASHBOARD</li>
         </a>
-         <a href="./">
+        <a href="./">
           <li
             class="text-3xl relative after:bg-gray-600 after:absolute after:h-1 after:w-0 after:top-9 after:left-0 hover:after:w-full after:transition-all after:duration-400 cursor-pointer">
             ABOUT US</li>
         </a>
-         <a href="./">
+        <a href="./">
           <li
             class="text-3xl relative after:bg-gray-600 after:absolute after:h-1 after:w-0 after:top-9 after:left-0 hover:after:w-full after:transition-all after:duration-400 cursor-pointer">
             CONTATTI</li>
         </a>
       </ul>
 
-      <ul class="flex gap-10 items-center">
+      <ul class="hidden lg:flex gap-10 items-center">
         <svg class="h-8" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="64" height="64"
           viewBox="0,0,256,256">
           <g fill-opacity="0.6902" fill="#000000" fill-rule="nonzero" stroke="none" stroke-width="1"
@@ -122,50 +140,71 @@
     <div class="h-0.3 bg-black"></div>
   </navbar>
 
+  <div class="flex flex-col items-start lg:items-end max-w-[1200px] pt-20 w-[80%]">
+    <h1 style="font-family: 'Oswald', sans-serif" class="text-5xl text-slate-500 text-end">IL PROGETTO DATASCAN</h1>
+    <div class="flex lg:flex-row flex-col-reverse lg:items-end items-start lg:flex lg:justify-between  mt-20">
 
-  <div class="flex w-[90%] justify-around items-start mt-30">
-    <div class="flex flex-col justify-start items-center align-middle">
-      <div>
-        <p style="font-family: 'Oswald', sans-serif" id="count" class="text-instblue text-6xl w-[100px]  mb-2"></p>
-        <p style="font-family: 'Oswald', sans-serif" class="text-gray-500 ">DI DATI ORARI</p>
+      <div class="flex flex-col justify-start items-center align-middle">
+
+        <div class="w-fit">
+          <p style="font-family: 'Oswald', sans-serif" id="count" class="text-instblue text-6xl w-[100px]  mb-2"></p>
+          <p style="font-family: 'Oswald', sans-serif" class="text-gray-500 ">DI DATI ORARI</p>
+        </div>
+        <div class="mt-10">
+          <p id="stat" style="font-family: 'Oswald', sans-serif" id="stat"
+            class="text-instblue text-6xl w-[100px] mb-2">
+            2,543</p>
+          <p style="font-family: 'Oswald', sans-serif" class="text-gray-500 ">CARTELLINI </p>
+        </div>
       </div>
-      <div class="mt-10">
-        <p id="stat" style="font-family: 'Oswald', sans-serif" id="stat" class="text-instblue text-6xl w-[100px] mb-2">
-          2,543</p>
-        <p style="font-family: 'Oswald', sans-serif" class="text-gray-500 ">CARTELLINI </p>
+      <div class="lg:w-[60%] w-full text-xl text-justify lg:mb-0 mb-10">
+        Datascan è un progetto istituzionale che si occupa della raccolta e digitalizzazione dei dati pluviometrici di
+        21
+        stazioni, con serie storiche continue dal 1970 ad oggi. Attraverso questa piattaforma, gli utenti possono
+        consultare i dati originali, acquisiti tramite cartellini pluviometrici scannerizzati e digitalizzati, a
+        supporto
+        di studi scientifici, analisi climatiche e monitoraggio ambientale. Il sito garantisce un accesso chiaro e
+        diretto
+        alle informazioni.
       </div>
-    </div>
-    <div class="w-[40%] text-xl text-justify">
-      Datascan è un progetto istituzionale che si occupa della raccolta e digitalizzazione dei dati pluviometrici di 21
-      stazioni, con serie storiche continue dal 1970 ad oggi. Attraverso questa piattaforma, gli utenti possono
-      consultare i dati originali, acquisiti tramite cartellini pluviometrici scannerizzati e digitalizzati, a supporto
-      di studi scientifici, analisi climatiche e monitoraggio ambientale. Il sito garantisce un accesso chiaro e diretto
-      alle informazioni.
     </div>
   </div>
 
-  <div class="flex flex-col mt-20 bg-blue-100 w-full items-center">
-    <div class="w-[70%] mt-15">
-      <div class="flex mt-10 gap-10">
-        <div
-          class="w-80 h-60 bg-center outline-4 outline-[rgba(255,255,255,0.6)] shadow-2xl  bg-cover hover:scale-[120%] transform transition duration-400 ease-in-out"
-          style="background-image: url('./src/images/prof/prof3.jpg');"></div>
-        <div
-          class="w-80 h-60 bg-center outline-4 outline-[rgba(255,255,255,0.6)] bg-cover hover:scale-[120%] transform transition duration-300 ease-in-out"
-          style="background-image: url('./src/images/prof/prof2.jpg');"></div>
-        <div
-          class="w-80 h-60 bg-center outline-4 outline-[rgba(255,255,255,0.6)] bg-cover hover:scale-[120%] transform transition duration-300 ease-in-out"
-          style="background-image: url('./src/images/prof/prof1.jpg');"></div>
-        <div
-          class="w-80 h-60 bg-center outline-4 outline-[rgba(255,255,255,0.6)] bg-cover hover:scale-[120%] transform transition duration-300 ease-in-out"
-          style="background-image: url('./src/images/prof/prof4.jpg');"></div>
+  <div class="dic w-full bg-slate-300 mt-20 flex justify-center ">
+    <div id="pdiv" class="flex flex-col  items-center lg:px-0 max-w-[1180px] w-[80%] mt-20">
+      <div class="flex flex-col w-full lg:flex-row-reverse lg:items-start items-start lg:gap-20 justify-between">
+        <h1 style="font-family: 'Oswald', sans-serif"
+          class="text-5xl mb-10 lg:mb-0 text-end text-slate-600 w-full block">IL
+          IL NOSTRO TEAM
+        </h1>
+        <div class="  lg:max-w-[50%] text-lg text-justify">
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa, rem. Et non repellat ad eum numquam corporis
+          nemo. Sit atque nostrum quos ullam vitae ipsa reprehenderit, voluptatem quibusdam eos Lorem ipsum dolor sit
+          amet consectetur adipisicing elit. Error laudantium obcaecati tempora cupiditate deserunt, reprehenderit enim
+          repellendus explicabo
+        </div>
       </div>
-      <div class="mt-10">
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa, rem. Et non repellat ad eum numquam corporis
-        nemo. Sit atque nostrum quos ullam vitae ipsa reprehenderit, voluptatem quibusdam eos qui. Lorem, ipsum dolor
-        sit amet consectetur adipisicing elit. Earum omnis esse iusto impedit accusamus exercitationem reiciendis
-        excepturi distinctio quas magni, et perspiciatis! Alias, ullam nihil. Quidem necessitatibus atque ex libero?
-        lorem
+      <div class=" w-full mt-15">
+        <div class="flex  gap-10">
+          <div
+            class="selected after:h-3 after:w-0 after:bg-instblue after:absolute relative hover:after:w-full after:bottom-0 after:transition-all after:duration-400 after:ease-in-out cursor-pointer prof w-80 h-60 bg-center outline-4 outline-[rgba(255,255,255,0.6)] shadow-2xl  bg-cover hover:scale-[105%] transform transition duration-400 ease-in-out"
+            style="background-image: url('./src/images/prof/prof3.jpg');">
+          </div>
+          <div
+            class="after:h-3 after:w-0 after:bg-instblue after:absolute relative hover:after:w-full after:bottom-0 after:transition-all after:duration-400 after:ease-in-out  prof w-80 h-60 bg-center outline-4 outline-[rgba(255,255,255,0.6)] bg-cover hover:scale-[105%] transform transition duration-300 ease-in-out"
+            style="background-image: url('./src/images/prof/prof2.jpg');">
+
+          </div>
+          <div
+            class="after:h-3 after:w-0 after:bg-instblue after:absolute relative hover:after:w-full after:bottom-0 after:transition-all after:duration-400 after:ease-in-out cursor-pointer prof w-80 h-60 bg-center outline-4 outline-[rgba(255,255,255,0.6)] bg-cover hover:scale-[105%] transform transition duration-300 ease-in-out"
+            style="background-image: url('./src/images/prof/prof1.jpg');"></div>
+          <div
+            class="after:h-3 after:w-0 after:bg-instblue after:absolute relative hover:after:w-full after:bottom-0 after:transition-all after:duration-400 after:ease-in-out  cursor-pointer prof w-80 h-60 bg-center outline-4 outline-[rgba(255,255,255,0.6)] bg-cover hover:scale-[105%] transform transition duration-300 ease-in-out"
+            style="background-image: url('./src/images/prof/prof4.jpg');"></div>
+        </div>
+        <div id="profdesc" class="flex flex-row-reverse gap-10 mt-24 justify-around">
+
+        </div>
       </div>
     </div>
 

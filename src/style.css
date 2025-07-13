@@ -1,6 +1,7 @@
 @import "tailwindcss";
+
 @theme {
-    --color-instblue: #1266CD
+  --color-instblue: #1266CD
 }
 
 @font-face {
@@ -22,12 +23,13 @@
 .flatpickr-day.selected:hover,
 .flatpickr-day.startRange:hover,
 .flatpickr-day.endRange:hover {
-    border-radius: 0 !important; /* rende quadrata la cella */
-    
+  border-radius: 0 !important;
+  /* rende quadrata la cella */
+
 }
 
 .flatpickr-day.today {
-    border-radius: 0%;
+  border-radius: 0%;
 }
 
 .flatpickr-day.selected:hover,
@@ -36,13 +38,36 @@
   background: #1266CD !important;
 }
 
-.flatpickr-weekdays{
+.flatpickr-weekdays {
   font-family: "oswald", "sans-serif";
 }
 
 .flatpickr-calendar {
-    border-radius: 0 !important;
-    box-shadow: none;
+  border-radius: 0 !important;
+  box-shadow: none;
+}
+
+
+.dic {
+  /* Basic dimensions and centering */
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /* Dark mode colors and gradient */
+  background: #121212;
+  /* Fallback for browsers that don't support gradients */
+  background: linear-gradient(135deg,
+      #eaeaea 25%,
+      #f1f1f1 25%,
+      #f1f1f1 50%,
+      #eaeaea 50%,
+      #eaeaea 75%,
+      #f1f1f1 75%,
+      #f1f1f1);
+  background-size: 40px 40px;
 }
 
 
@@ -54,13 +79,15 @@
 .tabulator .tabulator-header,
 .tabulator .tabulator-col {
   border: none !important;
-  
+
 }
- .tabulator{
-   border: none !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* ombra leggera */
+
+.tabulator {
+  border: none !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  /* ombra leggera */
   background-color: white !important;
- }
+}
 
 .tabulator,
 .tabulator .tabulator-tableholder,
@@ -72,14 +99,18 @@
 
 .tabulator .tabulator-header .tabulator-col {
   background-color: #1266bc !important;
-  color: white !important;       /* testo bianco per contrasto */
-  font-weight: 600;              /* testo leggermente più marcato */
+  color: white !important;
+  /* testo bianco per contrasto */
+  font-weight: 600;
+  /* testo leggermente più marcato */
 }
 
 .tabulator .tabulator-row.even {
-  background-color: #E2E8F0 !important; /* slate-200 */
+  background-color: #E2E8F0 !important;
+  /* slate-200 */
 }
- .tabulator .tabulator-row.odd {
+
+.tabulator .tabulator-row.odd {
   background-color: #ffffff !important;
 }
 
