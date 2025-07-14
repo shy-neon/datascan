@@ -51,8 +51,8 @@
     <div id="viewDiv"></div>
   </div>
 
-  <navbar style="font-family: 'Oswald', sans-serif"
-    class="sticky top-0 bg-gray-50 flex flex-col w-full justify-around py-5 text-gray-600">
+  <navbar style="font-family: 'Oswald', sans-serif; box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);"
+    class="sticky z-100 top-0 bg-gray-50 flex flex-col w-full justify-around py-5 text-gray-600">
     <div class="flex justify-around w-full">
       <ul class="flex gap-10">
         <a href="./">
@@ -142,15 +142,16 @@
 
   <div class="flex flex-col items-start lg:items-end max-w-[1200px] pt-20 w-[80%]">
     <h1 style="font-family: 'Oswald', sans-serif" class="text-5xl text-slate-500 text-end">IL PROGETTO DATASCAN</h1>
-    <div class="flex lg:flex-row flex-col-reverse lg:items-end items-start lg:flex lg:justify-between  mt-20">
+    <div class="flex lg:flex-row flex-col-reverse items-center lg:items-end  lg:flex lg:justify-between  mt-10">
 
-      <div class="flex flex-col justify-start items-center align-middle">
+      <div
+        class="flex flex-row w-[95%] lg:w-fit justify-between lg:flex-col lg:justify-start items-center align-middle">
 
         <div class="w-fit">
           <p style="font-family: 'Oswald', sans-serif" id="count" class="text-instblue text-6xl w-[100px]  mb-2"></p>
           <p style="font-family: 'Oswald', sans-serif" class="text-gray-500 ">DI DATI ORARI</p>
         </div>
-        <div class="mt-10">
+        <div class="lg:mt-10">
           <p id="stat" style="font-family: 'Oswald', sans-serif" id="stat"
             class="text-instblue text-6xl w-[100px] mb-2">
             2,543</p>
@@ -174,7 +175,7 @@
     <div id="pdiv" class="flex flex-col  items-center lg:px-0 max-w-[1180px] w-[80%] mt-20">
       <div class="flex flex-col w-full lg:flex-row-reverse lg:items-start items-start lg:gap-20 justify-between">
         <h1 style="font-family: 'Oswald', sans-serif"
-          class="text-5xl mb-10 lg:mb-0 text-end text-slate-600 w-full block">IL
+          class="text-5xl mb-10 lg:mb-0 text-end text-slate-600 w-full block">
           IL NOSTRO TEAM
         </h1>
         <div class="  lg:max-w-[50%] text-lg text-justify">
@@ -207,6 +208,58 @@
         </div>
       </div>
     </div>
+  </div>
+
+
+
+  <div class=" w-full flex justify-center ">
+    <div id="pdiv" class="flex flex-col  items-center lg:px-0 max-w-[1180px] w-[80%] mt-20">
+      <div class="flex flex-col w-full lg:flex-row lg:items-start items-start lg:gap-20 justify-between">
+        <h1 style="font-family: 'Oswald', sans-serif" class="text-5xl mb-10 lg:mb-0 text-end text-slate-600  block">
+          LA WEB APP
+        </h1>
+        <div class="flex flex-col lg:w-[50%] w-full">
+          <div class="  text-lg text-justify">
+            Uno strumento pensato per esplorare e comprendere le precipitazioni del passato.
+            Questa webapp raccoglie e rende accessibili dati pluviometrici storici, offrendo la possibilità di muoversi
+            tra decenni
+            di misurazioni per osservare come la pioggia ha segnato il tempo.
+            Un punto di partenza per analisi, confronti e riflessioni sui cambiamenti del clima nel corso del tempo.
+          </div>
+
+          <div class="w-full mt-15">
+            <div style="font-family: 'Oswald', sans-serif" class="flex w-full justify-between items-end gap-10">
+              <div class="flex  gap-4 flex-col justify-center items-center">
+                <img class="h-28" src="./src/images/loghi/icons/document.png" alt="">
+                <p>CONSULTA I DATI</p>
+              </div>
+
+              <div class="flex  gap-1 flex-col justify-center items-center">
+                <img class="h-32" src="./src/images/loghi/icons/Group 4.svg" alt="">
+                <p>SSCARICA I DATI</p>
+              </div>
+
+              <div class="flex  flex-col justify-center items-center">
+                <img class="w-40" src="./src/images/loghi/icons/cart.svg" alt="">
+                <p>CONSULTA LE FONTI</p>
+              </div>
+
+              <div class="flex  gap-2 flex-col justify-center items-center  -ml-4">
+                <img class="h-28" src="./src/images/loghi/icons/stats.svg" alt="">
+                <p>STATISTICHE</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <footer class="h-52 w-full bg-blue-900 mt-10">
+    ciao
+  </footer>
+
 
 
 </body>

@@ -35,12 +35,13 @@
   </inst>
 
 
-  <navbar style="font-family: 'Oswald', sans-serif" class="flex flex-col w-full justify-around mt-5 text-gray-600">
+  <navbar style="font-family: 'Oswald', sans-serif; box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);"
+    class="sticky top-0 bg-gray-50 flex flex-col w-full justify-around py-5 z-1000 text-gray-600">
     <div class="flex justify-around w-full">
       <ul class="flex gap-10">
         <a href="./">
           <li
-            class="text-3xl relative after:bg-gray-600 after:absolute after:h-1 after:w-0 after:top-9 after:left-0 hover:after:w-full after:transition-all after:duration-400 cursor-pointer">
+            class="text-3xl text-instblue relative after:bg-instblue after:absolute after:h-1  after:top-9 after:left-0 after:w-full after:transition-all after:duration-400 cursor-pointer">
             HOME</li>
         </a>
         <a href="./dati.html">
@@ -48,19 +49,19 @@
             class="text-3xl relative after:bg-gray-600 after:absolute after:h-1 after:w-0 after:top-9 after:left-0 hover:after:w-full after:transition-all after:duration-400 cursor-pointer">
             DASHBOARD</li>
         </a>
-        <a href="./about.html">
+        <a href="./">
           <li
             class="text-3xl relative after:bg-gray-600 after:absolute after:h-1 after:w-0 after:top-9 after:left-0 hover:after:w-full after:transition-all after:duration-400 cursor-pointer">
             ABOUT US</li>
         </a>
-        <a href="./contatti.html">
+        <a href="./">
           <li
             class="text-3xl relative after:bg-gray-600 after:absolute after:h-1 after:w-0 after:top-9 after:left-0 hover:after:w-full after:transition-all after:duration-400 cursor-pointer">
             CONTATTI</li>
         </a>
       </ul>
 
-      <ul class="flex gap-10 items-center">
+      <ul class="hidden lg:flex gap-10 items-center">
         <svg class="h-8" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="64" height="64"
           viewBox="0,0,256,256">
           <g fill-opacity="0.6902" fill="#000000" fill-rule="nonzero" stroke="none" stroke-width="1"
@@ -75,6 +76,7 @@
           </g>
         </svg>
 
+
         <svg class="h-7.5" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="50" height="50"
           viewBox="0,0,256,256">
           <g fill-opacity="0.6902" fill="#000000" fill-rule="nonzero" stroke="none" stroke-width="1"
@@ -88,6 +90,7 @@
             </g>
           </g>
         </svg>
+
 
         <svg class="h-8" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="50" height="50"
           viewBox="0,0,256,256">
@@ -201,7 +204,7 @@
     class="appearOC flex gap-5 lg:w-[1180px] w-screen flex-col lg:flex-row lg:px-0 px-10">
 
     <div class="  shadow-lg border-1 border-gray-200  bg-white">
-      <canvas class="h-72 p-3 pr-5" id="ietogramma"></canvas>
+      <canvas class="h-72 p-2 pr-5" id="ietogramma"></canvas>
     </div>
 
     <div class="w-full  shadow-lg border-1 border-gray-200  bg-white">
