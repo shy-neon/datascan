@@ -26,6 +26,7 @@ const tabdiv = document.getElementById("graphdiv")
 const statdiv = document.getElementById("statdiv")
 
 const appearOC = document.getElementsByClassName("appearOC")
+const tuttiDati = document.getElementsByClassName("tuttiDati")
 
 let datas = []
 
@@ -49,12 +50,17 @@ export let cal = flatpickr("#datePicker", {
   mode: "range",
   locale: Italian,
   onChange: function (selectedDates, dateStr, instance) {
-    console.log(dateStr)
+    console.log("ciaoo" + dateStr)
     if (selectedDates.length >= 2) {
       let query = ("DataOra BETWEEN '" + dateStr.substring(0, 10) + "' AND '" + dateStr.substring(14, 25) + "'")
       console.log(query)
       graph.graficocumulata(cumul, tabel, query)
-      graph.graficoietogramma(iet, tabel, query)
+      if(service.differenzaMinoreDiQuattroGiorni(new Date(dateStr.substring(0,10)), new Date(dateStr.substring(dateStr.length - 10,dateStr.length)))){
+        graph.graficoietogrammaPreciso(iet, tabel, query)
+      } else {
+        graph.graficoietogramma(iet, tabel, query)
+      }
+      
       if (query == null) {
         tabella(tabel, "1=1")
       } else {
@@ -166,6 +172,11 @@ view.when(() => {
           setMinDateFromAPI();
           graph.graficocumulata(cumul, tabel, "1=1")
           graph.graficoietogramma(iet, tabel, "1=1")
+          
+          let urltuttidati = 'https://www.datascan.it/DatiCentraline/' + fullFeature.attributes["ID_Centralina"] + '.txt'
+          document.getElementById('tuttiDati').addEventListener('click', function() {
+            window.open(urltuttidati, '_blank');
+          });
         }
       }
     });
@@ -267,3 +278,4 @@ function initdate(table) {
         }
     })
 }
+

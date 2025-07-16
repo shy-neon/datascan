@@ -122,6 +122,14 @@ export function pergiornoietogramma(dati) {
     return datiarray
 }
 
+export function peroraietogramma(dati) {
+    let datiarray = dati.map(d => ({
+            x: d.DataOra,
+            y: d.Pioggia_mm,
+        }))
+    return datiarray
+}
+
 
 export function cumula(datiTabella) {
     let cumulated = 0;
@@ -227,3 +235,15 @@ export function pergiorno(dati) {
     return datiarray
 }
 
+export function differenzaMinoreDiQuattroGiorni(data1, data2) {
+    const msPerGiorno = 24 * 60 * 60 * 1000;
+
+    // Assicurati che siano oggetti Date
+    const d1 = new Date(data1);
+    const d2 = new Date(data2);
+
+    const differenza = Math.abs(d1 - d2);
+    const giorniDifferenza = differenza / msPerGiorno;
+
+    return giorniDifferenza <= 4;
+}

@@ -239,12 +239,76 @@ export function graficoietogramma(graf, tabel, where) {
                     }
                 }
             },
-            plugins: [shadowPlugin]
+            
         });
     });
-
-
 }
+
+
+export function graficoietogrammaPreciso(graf, tabel, where) {
+
+    const existingChart = Chart.getChart("ietogramma");
+    let datiTabella = [];
+    if (existingChart) {
+        tabel.queryFeatures({
+            where: where,
+            outFields: ["*"],
+            returnGeometry: false
+        }).then(result => {
+            datiTabella = result.features.map(f => ({ ...f.attributes }));
+            existingChart.data.datasets[0].data = service.peroraietogramma(datiTabella);
+            existingChart.update();
+            return;
+        });
+        return;
+    }
+
+    tabel.queryFeatures({
+        where: "1=1",
+        outFields: ["*"],
+        returnGeometry: false
+    }).then(result => {
+        datiTabella = result.features.map(f => ({ ...f.attributes }));
+        let tabellasist = datiTabella.map(d => ({
+            x: d.DataOra,
+            y: d.Pioggia_mm,
+        }))
+
+        const graficoTorta = new Chart(graf, {
+            type: 'bar',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Pioggia in mm',
+                    data: tabellasist,
+                    backgroundColor: '#1266CD',
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                parsing: false,
+                scales: {
+                    x: {
+                        type: 'time',
+                        time: {
+                            unit: 'day',
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'mm/h'
+                        }
+                    }
+                }
+            },
+            
+        });
+    });
+}
+
+
+
 
 const shadowPlugin = {
     id: 'shadowLine',
